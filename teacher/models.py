@@ -71,7 +71,7 @@ class Content(models.Model):
     status = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ("-date",)
+        ordering = ("date",)
 
     def __str__(self):
         return str(self.id) + "-" + str(self.title)

@@ -89,8 +89,11 @@
     <tbody>
       {% for recentCampaign in future_campaign %}
       <tr data-toggle="modal" data-target="#tbModal" class="trRecentCampaign">
-        <td class="recentCampaignTitle">{{ recentCampaign.title }}</td>
-        <td class="recentCampaignDate">{{ recentCampaign.date }}</td>
+        <td class="recentTitle">{{ recentCampaign.title }}</td>
+        <td class="recentDate">{{ recentCampaign.date }}</td>
+        <td class="recentId" style="display:none;" >{{ recentCampaign.id }}</td>
+        <td class="recentDetails" style="display:none;" >{{ recentCampaign.details }}</td>
+        <td class="recentLink" style="display:none;" >{{ recentCampaign.associated_link }}</td>
       </tr>
       {% endfor%}
     </tbody>
@@ -102,7 +105,7 @@
       Past Content Campaigns
     </h5>
   </div>
-  <table
+  <!-- <table
   class="table"
   id="dtHorizontalVerticalExampleWrapper"
   class="table table-bordered table-sm"
@@ -118,13 +121,13 @@
   </thead>
   <tbody>
     {% for recentCampaign in past_campagin %}
-    <tr data-toggle="modal" data-target="#tbModal" class="trRecentCampaign">
+    <tr data-toggle="modal" data-target="#tbModal" class="trPastCampaign">
       <td class="recentCampaignTitle">{{ recentCampaign.title }}</td>
       <td class="recentCampaignDate">{{ recentCampaign.date }}</td>
     </tr>
     {% endfor%}
   </tbody>
-</table>
+</table> -->
 </div>
 
 
@@ -132,7 +135,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="gfgmodallabel" style"text-align: center">Selected Course</h5>
+        <h5 class="modal-title" id="gfgmodallabel" style"text-align: center">Selected Content</h5>
         <button
           type="button"
           class="close"
@@ -161,23 +164,30 @@
 {% block scripts %}
 <script>
   $(function () {
-    $(".trDeadline").click(function () {
-        var deadlineCode = $(this).find(".deadlineCode").text();
-        var deadlineDetails = $(this).find(".deadlineDetails").text();
-        var deadlineDate = $(this).find(".deadlineDate").text();
+    $(".trRecentCampaign").click(function () {
+        var title = $(this).find(".recentTitle").text();
+        var details = $(this).find(".recentDetails").text();
+        var associated_link = $(this).find(".recentLink").text();
+        var date = $(this).find(".recentDate").text();
+        var id = $(this).find(".recentId").text();
+
         var p = "";
-		p += '<div class="container">'
-        p += '<h2 style="text-align: center" name="code">' + deadlineCode + "</h2>";
-        p += '<h4 style="text-align: center" name="details">' + deadlineDetails + "</h4>";
-        p += '<h5 style="text-align: center" name="date">' + deadlineDate + "</h5>";
+        p += "<form action='edit_content' method='POST'>"
 
-        p += '<input type="hidden" name="date" value="'+deadlineDate+'"/>'
-        p += '<input type="hidden" name="details" value="'+deadlineDetails+'"/>'
-        p += '<input type="hidden" name="code" value="'+deadlineCode+'"/>'
+		    p += '<div class="container">'
+        p += '<h2 style="text-align: center" name="code">' + title + "</h2>";
+        p += '<p style="text-align: center" name="details">' + details + "</p>";
+        p += '<h5 style="text-align: center" name="date">' + associated_link + "</h5>";
+        p += '<h5 style="text-align: center" name="date">' + date + "</h5>";
 
+        p += '<input type="hidden" name="title" value="'+title+'"/>'
+        p += '<input type="hidden" name="details" value="'+details+'"/>'
+        p += '<input type="hidden" name="associated_link" value="'+associated_link+'"/>'
+        p += '<input type="hidden" name="id" value="'+id+'"/>'
 		p += '<br/>'
-        p += '<button type="submit" class="btn btn-success btn-lg btn-block" value="submit">Mark as done.</button>'
-		p += '</div>'
+        p += '<button type="submit" class="btn btn-success btn-lg btn-block" value="submit">Edit Content.</button>'
+        p += "</form>"
+        p += '</div>'
         $("#divGFG").empty();
         $("#divGFG").append(p);
     });

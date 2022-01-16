@@ -4,6 +4,7 @@ from . import views
 urlpatterns = [
     path('', views.ngo_admin_home, name='ngo_admin_home'),
     path('create_content', views.create_content, name='ngo_admin_create_content'),
+    path('edit_content', views.edit_content, name='ngo_admin_edit_content'),
     path('courses', views.teacher_course, name='teacher_course'),
     path('committee', views.teacher_committee, name='teacher_committee'),
     path('head', views.teacher_head, name='teacher_head'),

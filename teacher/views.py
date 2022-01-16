@@ -11,26 +11,9 @@ from django.views.decorators.csrf import csrf_exempt
 import calendar
 
 def ngo_admin_home(request):
-    # if request.method == "POST":
-    #     deadline_date = request.POST.get("date")
-    #     deadline_details = request.POST.get("details")
-    #     deadline_code = request.POST.get("code")
-
-    #     year = datetime.datetime.now().year
-    #     year = str(year)
-
-    #     course = Course.objects.get(course_code=deadline_code, year=year)
-
-    #     date = datetime.datetime.strptime(deadline_date, "%B %d, %Y")
-    #     date = str(date)
-    #     date = date.split(" ")[0]
-
-    #     intended_deadline = Deadline.objects.get(
-    #         date=date, details=deadline_details, course=course
-    #     )
-    #     intended_deadline.status = "Completed"
-    #     intended_deadline.save()
-
+    if request.method == "POST":
+        return redirect("ngo_admin_edit_content")
+        
     if request.user.is_authenticated:
         ngo_admin = NGO_Admin.objects.get(user=request.user)
         contents = Content.objects.filter(added_by=ngo_admin)
@@ -57,7 +40,14 @@ def ngo_admin_home(request):
     else:
         return redirect("login")
 
-
+@csrf_exempt
+def edit_content(request):
+    if request.method == "POST":
+        print(request.POST.get("id"))
+    return render(
+        request,
+        "teacher/ngo_admin_edit_content.html",
+    )
 
 def create_content(request):
     failed = False
