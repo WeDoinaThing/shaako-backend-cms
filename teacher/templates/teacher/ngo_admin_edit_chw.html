@@ -1,0 +1,107 @@
+<!-- @format -->
+{% extends "base.html" %}{% load static %} {% load template_filters %}
+<!-- prettier-ignore -->
+{% block head %} {% endblock %}
+{% block navcontent %}
+
+{% if is_ngo_admin %}
+<a
+  class="anim nav-link active"
+  href="{% url 'ngo_admin_home' %} "
+  style="color: #eeeeee"
+  >Dashboard
+</a>
+
+<a
+  class="anim nav-link active"
+  href="{% url 'ngo_admin_chw' %} "
+  style="color: #eeeeee"
+  >Health Workers
+</a>
+{% endif %} {% endblock %} {% block body %}
+
+<div class="container" style="padding-top: 20px; padding-bottom: 10px">
+  {% if failed %}
+  <div class="alert alert-danger" role="alert">
+    Profile adding failed. Check if it exists already!
+  </div>
+  {% endif %} {% if success %}
+  <div class="alert alert-success" role="alert">Profile adding successful.</div>
+  {% endif %}
+  <div class="card" style="padding-left: 30px; padding-right: 30px">
+    <div class="card-body">
+      <h3 class="card-title" style="text-align: center">Edit Profile</h3>
+      <hr />
+      <form class="course_creation" method="POST">
+        {% csrf_token %}
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <label for="inputID">ID</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inputID"
+              placeholder="Enter Organization ID for Employee"
+              name="inputID"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <label for="inputName">Full Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inputName"
+              placeholder="Enter Employee Name"
+              name="inputName"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label for="inputAge">Age</label>
+            <input
+              type="number"
+              class="form-control"
+              id="inputAge"
+              placeholder="Enter Employee Age"
+              name="inputAge"
+              required
+            />
+          </div>
+          <div class="form-group col-md-8">
+            <label for="inputRegion">Region</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inputRegion"
+              placeholder="Enter Employee Assigned Region"
+              name="inputRegion"
+              required
+            />
+          </div>
+        </div>
+
+        <br />
+        <div class="col text-center">
+          <button
+            type="submit"
+            class="btn btn-success"
+            style="text-align: center"
+            value="submit"
+            required
+          >
+            Edit Profile
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %} {% block scripts %} {% endblock %}

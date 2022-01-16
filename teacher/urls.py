@@ -7,6 +7,7 @@ urlpatterns = [
     path('edit_content', views.edit_content, name='ngo_admin_edit_content'),
     path('health_worker', views.ngo_admin_chw, name='ngo_admin_chw'),
     path('create_chw', views.create_chw, name='ngo_admin_create_chw'),
+    path('edit_chw', views.edit_chw, name='ngo_admin_edit_chw'),
     path('committee', views.teacher_committee, name='teacher_committee'),
     path('head', views.teacher_head, name='teacher_head'),
     path('create_course', views.create_course, name='teacher_create_course'),

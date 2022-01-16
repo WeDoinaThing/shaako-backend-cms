@@ -96,8 +96,8 @@ def create_content(request):
         return redirect("login")
 
 def ngo_admin_chw(request):
-    # if request.method == "POST":
-    #     return redirect("ngo_admin_edit_content")
+    if request.method == "POST":
+        return redirect("ngo_admin_edit_chw")
         
     if request.user.is_authenticated:
         ngo_admin = NGO_Admin.objects.get(user=request.user)
@@ -113,6 +113,18 @@ def ngo_admin_chw(request):
         )
     else:
         return redirect("login")
+
+@csrf_exempt
+def edit_chw(request):
+    if request.method == "POST":
+        print(request.POST.get("id"))
+    return render(
+        request,
+        "teacher/ngo_admin_edit_chw.html",
+        {
+            "is_ngo_admin": True,
+        }
+    )
 
 def create_chw(request):
     failed = False
