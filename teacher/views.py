@@ -9,6 +9,7 @@ from django.core.mail import send_mail, send_mass_mail
 from .utils import send_async_mail
 from django.views.decorators.csrf import csrf_exempt
 import calendar
+import hashlib
 
 def ngo_admin_home(request):
     if request.method == "POST":
@@ -121,17 +122,24 @@ def create_chw(request):
         name = request.POST.get("inputName")
         age = request.POST.get("inputAge")
         region = request.POST.get("inputRegion")
-
+        
         added_by = NGO_Admin.objects.get(user=request.user)
+        ngo = added_by.ngo
+
+        concat = str(id)+"-"+str(name)+"-"+str(ngo.ngo_name)+"-"+str(added_by.name)
+        access_token = hashlib.md5(concat.encode('utf-8')).hexdigest()
+
         try:
-            new_content = Content.objects.create(
-                title = title,
-                details = details,
-                associated_link = url,
-                added_by = added_by,
-                date = date,
+            new_chw = CHW.objects.create(
+                id = id,
+                name = name,
+                age = age,
+                region = region,
+                access_token=access_token,
+                ngo = ngo,
+                addedBy = added_by,
             )
-            new_content.save()
+            new_chw.save()
             success = True
             failed = False
 
@@ -139,6 +147,15 @@ def create_chw(request):
             print(e)
             success = False
             failed = True
+        return render(
+            request,
+            "teacher/ngo_admin_create_chw.html",
+            {
+                "is_ngo_admin": True,
+                "success": success,
+                "failed": failed,
+            },
+        )
 
     if request.user.is_authenticated:
 
