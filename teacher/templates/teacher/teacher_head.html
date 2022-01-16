@@ -1,0 +1,191 @@
+<!-- @format -->
+
+{% extends "base.html" %}{% load static %} {% block head %}
+
+<style media="screen">
+  .dtHorizontalVerticalExampleWrapper {
+    max-width: 750px;
+    margin: 0 auto;
+  }
+
+  #dtHorizontalVerticalExample th,
+  td {
+    white-space: nowrap;
+  }
+
+  table.dataTable thead .sorting:after,
+  table.dataTable thead .sorting:before,
+  table.dataTable thead .sorting_asc:after,
+  table.dataTable thead .sorting_asc:before,
+  table.dataTable thead .sorting_asc_disabled:after,
+  table.dataTable thead .sorting_asc_disabled:before,
+  table.dataTable thead .sorting_desc:after,
+  table.dataTable thead .sorting_desc:before,
+  table.dataTable thead .sorting_desc_disabled:after,
+  table.dataTable thead .sorting_desc_disabled:before {
+    bottom: 0.5em;
+  }
+</style>
+<style>
+  thead th {
+    background-color: #4a7ab5;
+    color: #ffffff;
+    text-indent: 13px;
+  }
+
+  tbody tr {
+    text-indent: 10px;
+    background-color: white;
+    color: black;
+    font-family: "Nunito", sans-serif;
+  }
+
+  tbody tr:hover {
+    cursor: pointer;
+    background-color: #62757f;
+    color: white;
+  }
+</style>
+
+{% endblock %} {% block navcontent %}
+<a
+  class="anim nav-link active"
+  href="{% url 'teacher_home' %} "
+  style="color: #eeeeee"
+  >DEADLINES</a
+>
+
+<a
+  class="anim nav-link active"
+  href="{% url 'teacher_course' %}"
+  style="color: #eeeeee"
+  >COURSES</a
+>
+
+{% if is_committee %}
+<a
+  class="anim nav-link active"
+  href="{% url 'teacher_committee' %}"
+  style="color: #eeeeee"
+  >COMMITTEE</a
+>
+{% endif %}
+{% if is_head %}
+<a
+  class="anim nav-link active"
+  href="{% url 'teacher_head' %}"
+  style="color: #eeeeee"
+  >HEAD DASHBOARD</a
+>
+{% endif %}{% endblock %} {% block body %}
+
+<div class="container" style="padding-top: 20px; padding-bottom: 10px">
+  <h3 style="text-align: center">HEAD DASHBOARD</h3>
+  <div class="container" style="align-self: center;  text-align: center; padding: 20px;">
+  <a class="btn btn-primary" href="{% url 'teacher_create_committee' %}" role="button">Create New Committee</a>
+</div>
+
+<div class="container" style="padding-top: 20px; padding-bottom: 10px">
+  <h3 style="text-align: center">Due Deadlines</h3>
+  <table
+    class="table"
+    id="dtHorizontalVerticalExampleWrapper"
+    class="table table-bordered table-sm"
+    cellspacing="0"
+    width="100%"
+    style="text-align: center; background-color: #ffffff"
+  >
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Due Date</th>
+        <th scope="col">Course Name</th>
+        <th scope="col">Submissions Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for deadline in deadlines %}
+      <tr data-toggle="modal" data-target="#tbModal" class="trDeadline">
+        <td class="deadlineDate">{{ deadline.date }}</td>
+        <td class="deadlineCode">{{ deadline.course.course_code }}</td>
+        <td class="deadlineDetails">{{ deadline.details }}</td>
+      </tr>
+      {% endfor%}
+    </tbody>
+  </table>
+</div>
+
+
+<div class="container" style="padding-top: 20px; padding-bottom: 10px">
+  <h3 style="text-align: center">Missed Deadlines</h3>
+  <table
+    class="table"
+    id="dtHorizontalVerticalExampleWrapper"
+    class="table table-bordered table-sm"
+    cellspacing="0"
+    width="100%"
+    style="text-align: center; background-color: #ffffff"
+  >
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Due Date</th>
+        <th scope="col">Course Name</th>
+        <th scope="col">Submissions Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for deadline in missed_deadlines %}
+      <tr data-toggle="modal" data-target="#tbModal" class="trDeadline">
+        <td class="deadlineDate">{{ deadline.date }}</td>
+        <td class="deadlineCode">{{ deadline.course.course_code }}</td>
+        <td class="deadlineDetails">{{ deadline.details }}</td>
+      </tr>
+      {% endfor%}
+    </tbody>
+  </table>
+</div>
+
+<div class="modal fade" id="tbModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="gfgmodallabel" style"text-align: center">Selected Course</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true"> ×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="GFGclass" id="divGFG"></div>
+        <div class="modal-footer row justify-content-center">
+          <button type="button" class="btn btn-dark" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script>
+  $(function () {
+    $(".trDeadline").click(function () {
+        var deadlineCode = $(this).find(".deadlineCode").text();
+        var deadlineDetails = $(this).find(".deadlineDetails").text();
+        var deadlineDate = $(this).find(".deadlineDate").text();
+        var p = "";
+		p += '<div class="container">'
+        p += '<h2 style="text-align: center" name="code">' + deadlineCode + "</h2>";
+        p += '<h4 style="text-align: center" name="details">' + deadlineDetails + "</h4>";
+        p += '<h5 style="text-align: center" name="date">' + deadlineDate + "</h5>";
+        $("#divGFG").empty();
+        $("#divGFG").append(p);
+    });
+  });
+</script>
+{% endblock %}

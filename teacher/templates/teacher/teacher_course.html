@@ -1,0 +1,182 @@
+{% extends "base.html" %}{% load static %} {% load template_filters %}
+{% block head %}
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" />
+<link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+<link href="{% static "cssp/mdb.min.css" %}" rel="stylesheet">
+<link href="{% static
+"cssp/style.css" %}" rel="stylesheet">
+<link href="{% static
+"cssp/addons/datatables.min.css" %}" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet" />
+
+<style media="screen">
+  .dtHorizontalVerticalExampleWrapper {
+    max-width: 750px;
+    margin: 0 auto;
+  }
+
+  #dtHorizontalVerticalExample th,
+  td {
+    white-space: nowrap;
+  }
+
+  table.dataTable thead .sorting:after,
+  table.dataTable thead .sorting:before,
+  table.dataTable thead .sorting_asc:after,
+  table.dataTable thead .sorting_asc:before,
+  table.dataTable thead .sorting_asc_disabled:after,
+  table.dataTable thead .sorting_asc_disabled:before,
+  table.dataTable thead .sorting_desc:after,
+  table.dataTable thead .sorting_desc:before,
+  table.dataTable thead .sorting_desc_disabled:after,
+  table.dataTable thead .sorting_desc_disabled:before {
+    bottom: 0.5em;
+  }
+
+</style>
+<style>
+  thead th {
+    background-color: #4a7ab5;
+    color: #ffffff;
+    text-indent: 13px;
+  }
+
+  tbody tr {
+    text-indent: 10px;
+    background-color: white;
+    color: black;
+    font-family: "Nunito", sans-serif;
+  }
+
+  tbody tr:hover {
+    cursor: pointer;
+    background-color: #62757f;
+    color: white;
+  }
+
+</style>
+{% endblock %} 
+
+
+{% block navcontent %}
+  <a class="anim nav-link active" href="{% url 'teacher_home' %} " style="color: #eeeeee">DEADLINES</a>
+  <a class="anim nav-link active" href="{% url 'teacher_course' %}" style="color: #eeeeee">COURSES</a>
+  {% if is_committee %}
+    <a class="anim nav-link active" href="{% url 'teacher_committee' %}" style="color: #eeeeee">COMMITTEE</a>
+  {% endif %} 
+{% if is_head %}
+<a
+  class="anim nav-link active"
+  href="{% url 'teacher_head' %}"
+  style="color: #eeeeee"
+  >HEAD DASHBOARD</a
+>
+{% endif %}
+{% endblock %} 
+
+
+{% block body %}
+  <div class="container" style="padding-top: 20px; padding-bottom: 10px">
+    <h3 style="text-align: center">My Active Courses</h3>
+    <table class="table" id="dtHorizontalVerticalExampleWrapper" class="table table-bordered table-sm" cellspacing="0"
+      width="100%" style="text-align: center">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Course Code</th>
+          <th scope="col">Course Name</th>
+          <th scope="col">Submissions Due</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for course in courses %}
+        {% if course.year == current_year %}
+        <tr class="trCourse" data-toggle="modal" data-target="#tbModal">
+          <td class="tdCourseCode">{{ course.course_code }}</td>
+          <td class="tdCourseTitle">{{ course.course_title }}</td>
+          <td class="tdCourseType">{{ course_submissions|get_item:course.course_code }}</td>
+        </tr>
+        {% endif %}
+        {% endfor%}
+      </tbody>
+    </table>
+  </div>
+
+
+  <div class="container" style="padding-top: 20px; padding-bottom: 10px">
+    <h3 style="text-align: center">My Past Courses</h3>
+    <table class="table" id="dtHorizontalVerticalExampleWrapper" class="table table-bordered table-sm" cellspacing="0"
+      width="100%" style="text-align: center">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Course Code</th>
+          <th scope="col">Course Name</th>
+          <th scope="col">Session</th>
+          <th scope="col">Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for course in courses %}
+        {% if course.year != current_year %}
+        <tr class="trCourse" data-toggle="modal" data-target="#tbModal">
+          <td class="tdCourseCode">{{ course.course_code }}</td>
+          <td class="tdCourseTitle">{{ course.course_title }}</td>
+          <td class="tdCourseTitle">{{ course.year }}</td>
+          <td class="tdCourseType">{{ course.course_type }}</td>
+        </tr>
+        {% endif %}
+        {% endfor%}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="modal fade" id="tbModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="gfgmodallabel" style"text-align: center">Selected Course</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true"> ×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="GFGclass" id="divGFG"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-dark" data-dismiss="modal">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %} 
+
+
+{% block scripts %}
+  <script>
+    $(function () {
+      $(".trCourse").click(function () {
+        var courseCode = $(this).find(".tdCourseCode").text();
+        var courseTitle = $(this).find(".tdCourseTitle").text();
+        var p = "";
+        p += '<h2 style="text-align: center">' + courseCode + "</h2>";
+        p += '<h4 style="text-align: center">' + courseTitle + "</h4>";
+        {% for key, values in modal_data.items %}
+        if ('{{key}}' == courseCode) {
+          {% for value in values %}
+          p += "<div class='card'><div class='card-body'>"
+          p += "<p>" + '{{ value.details }}' + "</p>";
+          p += "<h5>" + '{{ value.date }}' + "</h5>";
+          p += "<p>" + '{{ value.status }}' + "</p>";
+          p += "</div> </div>"
+          {% endfor %}
+        }
+        {% endfor %}
+
+        $("#divGFG").empty();
+        $("#divGFG").append(p);
+      });
+    });
+  </script>
+{% endblock %}

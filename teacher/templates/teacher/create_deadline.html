@@ -1,0 +1,133 @@
+<!-- @format -->
+{% extends "base.html" %}{% load static %} {% load template_filters %}
+<!-- prettier-ignore -->
+{% block head %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<link
+	rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous"
+/>
+<script
+	src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js"
+	type="text/javascript"
+></script>
+<link
+	href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css"
+	rel="stylesheet"
+	type="text/css"
+/>{% endblock %} {% block navcontent %}
+<a
+	class="anim nav-link active"
+	href="{% url 'teacher_home' %} "
+	style="color: #eeeeee"
+	>DEADLINES</a
+>
+<a
+	class="anim nav-link active"
+	href="{% url 'teacher_course' %}"
+	style="color: #eeeeee"
+	>COURSES</a
+>
+{% if is_committee %}
+<a
+	class="anim nav-link active"
+	href="{% url 'teacher_committee' %}"
+	style="color: #eeeeee"
+	>COMMITTEE</a
+>
+{% endif %} {% if is_head %}
+<a
+	class="anim nav-link active"
+	href="{% url 'teacher_head' %}"
+	style="color: #eeeeee"
+	>HEAD DASHBOARD</a
+>
+{% endif %}{% endblock %} {% block body %}
+
+<div class="container" style="padding-top: 20px; padding-bottom: 10px">
+	{% if failed %}
+	<div class="alert alert-danger" role="alert">Deadline Adding Failed.</div>
+	{% endif %} {% if success %}
+	<div class="alert alert-success" role="alert">
+		Deadline Addition Successful.
+	</div>
+	{% endif %}
+	<div class="container" style="padding-left: 100px; padding-right: 100px">
+		<div class="card" style="padding-left: 30px; padding-right: 30px">
+			<div class="card-body">
+				<h3 class="card-title" style="text-align: center">
+					Create Deadline
+				</h3>
+				<hr />
+				<form class="course_creation" method="POST">
+					{% csrf_token %}
+					<div class="form-row">
+						<div class="form-group col-md-8">
+							<label for="inputCommittee"
+								>Select Course Code</label
+							>
+							<select
+								id="inputCourse"
+								class="form-control"
+								name="inputCourse"
+								required
+							>
+								<option selected disabled="disabled" value="">
+									Choose...
+								</option>
+								{% for course in courses %}
+								<!-- prettier-ignore -->
+								{% if course.year == current_year %}
+								<option>{{ course.course_code }}</option>
+								{% endif %} {% endfor %}
+							</select>
+						</div>
+						<div class="form-group col-md-4">
+							<label for="datepicker">Deadline</label>
+							<input
+								class="form-control"
+								type="date"
+								min="{{ current_date }}"
+								placeholder="dd/mm/yyyy"
+								name="inputDate"
+								required
+							/>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="inputDetails">Submission Details</label>
+						<textarea
+							type="text"
+							id="inputDetails"
+							class="form-control"
+							name="inputDetails"
+							required
+						></textarea>
+					</div>
+
+					<br />
+					<div class="col text-center">
+						<button
+							type="submit"
+							class="btn btn-success"
+							style="text-align: center"
+							value="submit"
+							required
+						>
+							Create Deadline
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$("#datepicker").datepicker({
+		uiLibrary: "bootstrap4",
+	});
+</script>
+{% endblock %} {% block scripts %} {% endblock %}
