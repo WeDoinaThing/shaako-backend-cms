@@ -94,6 +94,69 @@ def create_content(request):
     else:
         return redirect("login")
 
+def ngo_admin_chw(request):
+    # if request.method == "POST":
+    #     return redirect("ngo_admin_edit_content")
+        
+    if request.user.is_authenticated:
+        ngo_admin = NGO_Admin.objects.get(user=request.user)
+        chws = CHW.objects.filter(addedBy=ngo_admin)
+                
+        return render(
+            request,
+            "teacher/ngo_admin_chw.html",
+            {
+                "is_ngo_admin": True,
+                "health_workers": chws,
+            },
+        )
+    else:
+        return redirect("login")
+
+def create_chw(request):
+    failed = False
+    success = False
+    if request.method == "POST":
+        id = request.POST.get("inputID")
+        name = request.POST.get("inputName")
+        age = request.POST.get("inputAge")
+        region = request.POST.get("inputRegion")
+
+        added_by = NGO_Admin.objects.get(user=request.user)
+        try:
+            new_content = Content.objects.create(
+                title = title,
+                details = details,
+                associated_link = url,
+                added_by = added_by,
+                date = date,
+            )
+            new_content.save()
+            success = True
+            failed = False
+
+        except Exception as e:
+            print(e)
+            success = False
+            failed = True
+
+    if request.user.is_authenticated:
+
+        year = str(datetime.datetime.now().year)
+        date = str(datetime.datetime.now().strftime("%Y-%m-%d"))
+        return render(
+            request,
+            "teacher/ngo_admin_create_chw.html",
+            {
+                "is_ngo_admin": True,
+                "current_year": year,
+                "current_date": date,
+                "success": success,
+                "failed": failed,
+            },
+        )
+    else:
+        return redirect("login")
 
 def teacher_course(request):
     if request.user.is_authenticated:

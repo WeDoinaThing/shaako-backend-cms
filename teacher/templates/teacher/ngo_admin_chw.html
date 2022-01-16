@@ -67,15 +67,15 @@
 {% endblock %} {% block body %}
 
 <div class="container" style="padding-top: 20px; padding-bottom: 10px">
-  <h3 style="text-align: center">Content</h3>
+  <h3 style="text-align: center">Health Workers</h3>
 
   <div class="container" style="align-self: center;  text-align: center; padding: 20px;">
-    <a class="btn btn-primary" href="{% url 'ngo_admin_create_content' %}" role="button">Create New Content</a>
+    <a class="btn btn-primary" href="{% url 'ngo_admin_create_chw' %}" role="button">Create New Health Worker Profile</a>
   </div>
 
   <div class="container">
     <h5 style="text-align: center">
-      Current Content Campaigns
+      Currently Employed Health Workers
     </h5>
   </div>
 
@@ -89,54 +89,21 @@
   >
     <thead class="thead-dark">
       <tr>
-        <th scope="col">Campaign Name</th>
-        <th scope="col">Campaign Date</th>
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Region</th>
       </tr>
     </thead>
     <tbody>
-      {% for recentCampaign in future_campaign %}
+      {% for worker in health_workers %}
       <tr data-toggle="modal" data-target="#tbModal" class="trRecentCampaign">
-        <td class="recentTitle">{{ recentCampaign.title }}</td>
-        <td class="recentDate">{{ recentCampaign.date }}</td>
-        <td class="recentId" style="display:none;" >{{ recentCampaign.id }}</td>
-        <td class="recentDetails" style="display:none;" >{{ recentCampaign.details }}</td>
-        <td class="recentLink" style="display:none;" >{{ recentCampaign.associated_link }}</td>
+        <td class="recentTitle">{{ worker.id }}</td>
+        <td class="recentDate">{{ worker.name }}</td>
+        <td class="recentDate">{{ worker.region }}</td>
       </tr>
       {% endfor%}
     </tbody>
   </table>
-
-</br>
-  <div class="container">
-    <h5 style="text-align: center">
-      Past Content Campaigns
-    </h5>
-  </div>
-  <table
-  class="table"
-  id="dtHorizontalVerticalExampleWrapper"
-  class="table table-bordered table-sm"
-  cellspacing="0"
-  width="100%"
-  style="text-align: center; background-color: #ffffff"
->
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">Campaign Name</th>
-      <th scope="col">Campaign Date</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for recentCampaign in past_campagin %}
-    <tr data-toggle="modal" data-target="#tbModal" class="trPastCampaign">
-      <td class="recentCampaignTitle">{{ recentCampaign.title }}</td>
-      <td class="recentCampaignDate">{{ recentCampaign.date }}</td>
-    </tr>
-    {% endfor%}
-  </tbody>
-</table>
-</div>
-
 
 <div class="modal fade" id="tbModal" tabindex="-1" role="dialog">
   <div class="modal-dialog">
