@@ -16,6 +16,7 @@ class UserAdmin(BaseUserAdmin):
                     "is_staff",
                     "is_superuser",
                     "groups",
+                    "is_superadmin",
                     "user_permissions",
                 )
             },
@@ -26,7 +27,7 @@ class UserAdmin(BaseUserAdmin):
     )
 
     list_display = ("email", "is_staff", "last_login")
-    list_filter = ("is_staff", "is_superuser", "is_active", "groups")
+    list_filter = ("is_staff", "is_superuser", "is_superadmin","is_active", "groups")
     search_fields = ("email",)
     ordering = ("email",)
     filter_horizontal = (

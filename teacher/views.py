@@ -170,7 +170,6 @@ def create_chw(request):
         )
 
     if request.user.is_authenticated:
-
         year = str(datetime.datetime.now().year)
         date = str(datetime.datetime.now().strftime("%Y-%m-%d"))
         return render(
@@ -186,6 +185,14 @@ def create_chw(request):
         )
     else:
         return redirect("login")
+
+
+def super_admin_home(request):
+    if request.user.is_authenticated and request.user.is_superadmin:
+        return render(
+            request,
+            "teacher/super_admin_dashboard.html"
+        )
 
 def teacher_course(request):
     if request.user.is_authenticated:

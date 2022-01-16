@@ -5,7 +5,11 @@ from customuser.models import UserManager, User
 
 def landing(request):
     if request.user.is_authenticated:
-        return redirect("ngo_admin_home")
+        if request.user.is_superadmin:
+            return redirect("super_admin_home")
+        else:
+            return redirect("ngo_admin_home")
+
     else:
         return redirect("login")
 
@@ -31,7 +35,10 @@ def home_login(request):
         if user is not None:
             auth.login(request, user)
             if user.is_authenticated:
-                return redirect("ngo_admin_home")
+                if user.is_superadmin:
+                    return redirect("super_admin_home")
+                else:
+                    return redirect("ngo_admin_home")
         else:
             return redirect("login")
 
