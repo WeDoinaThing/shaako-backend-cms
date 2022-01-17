@@ -45,6 +45,7 @@ def ngo_admin_home(request):
             },
         )
     else:
+        print("Not Authenticated")
         return redirect("login")
 
 @csrf_exempt
@@ -426,7 +427,6 @@ def delete_ngo(request, pk):
     failed = False
     success = False
 
-    print("__"+pk+"__")
     selectedNGO = NGO.objects.get(ngo_shortCode=pk)
     selectedNGO.delete()
     if request.user.is_authenticated and request.user.is_superadmin:
@@ -479,6 +479,9 @@ def create_ngo_admin(request):
                 password = password,
                 is_superadmin = False,
             )
+
+            new_user.set_password(password)
+            new_user.save()
 
             new_ngo_admin = NGO_Admin.objects.create(
                 user = new_user,
