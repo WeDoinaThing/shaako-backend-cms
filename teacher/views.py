@@ -366,13 +366,85 @@ def create_ngo(request):
 @csrf_exempt
 def edit_ngo(request):
     if request.user.is_authenticated and request.user.is_superadmin:
+        print(request.POST.get("name"))
+        print(request.POST.get("shortcode"))
+        print(request.POST.get("contactpoint"))
+
+        selectedNGO = NGO.objects.get(ngo_name=request.POST.get("name"))
+
         return render(
             request,
             "teacher/super_admin_edit_ngo.html",
             {
                 "is_superadmin": request.user.is_superadmin,
+                "entry": selectedNGO,
             },
         )
+
+def update_ngo(request):
+    failed = False
+    success = False
+    if request.method == "POST":
+        name = request.POST.get("inputName")
+        shortcode = request.POST.get("inputShortCode")
+        contactpoint = request.POST.get("inputContactPoint")
+
+        print(request.POST.get("inputContactPoint"))
+
+        selectedNGO = NGO.objects.get(ngo_name=request.POST.get("inputName"))
+        print(selectedNGO.contact_point, contactpoint)
+        try:
+            selectedNGO.ngo_name = name
+            selectedNGO.ngo_shortCode = shortcode
+            selectedNGO.contact_point = contactpoint
+
+            print(selectedNGO.contact_point, contactpoint)
+            selectedNGO.save()
+            success = True
+            failed = False
+
+        except Exception as e:
+            print(e)
+            success = False
+            failed = True
+
+    if request.user.is_authenticated and request.user.is_superadmin:
+        ngo_list = NGO.objects.all()
+
+        return render(
+            request,
+            "teacher/super_admin_dashboard.html",
+            {
+                "ngo_list": ngo_list,
+                "is_superadmin": request.user.is_superadmin
+            }
+        )
+    else:
+        return redirect("login")
+
+def delete_ngo(request, pk):
+    failed = False
+    success = False
+
+    print(pk)
+    selectedNGO = NGO.objects.get(ngo_shortCode=pk)
+    print(selectedNGO.ngo_name)
+    selectedNGO.delete()
+    if request.user.is_authenticated and request.user.is_superadmin:
+        ngo_list = NGO.objects.all()
+        
+        return redirect("/ngo_admin/super_admin_home")
+
+        # return render(
+        #     request,
+        #     "teacher/super_admin_dashboard.html",
+        #     {
+        #         "ngo_list": ngo_list,
+        #         "is_superadmin": request.user.is_superadmin
+        #     }
+        # )
+    else:
+        return redirect("login")
 
 def super_admin_ngo_member(request):
     if request.user.is_authenticated and request.user.is_superadmin:
@@ -435,7 +507,7 @@ def create_ngo_admin(request):
                 "is_superadmin": request.user.is_superadmin,
                 "ngo_list": ngo_list,
                 "success": success,
-                "failed": failed,
+                "failed": failed
             }
         )
 

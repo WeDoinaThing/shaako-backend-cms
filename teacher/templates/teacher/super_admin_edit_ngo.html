@@ -32,59 +32,45 @@
     <div class="card-body">
       <h3 class="card-title" style="text-align: center">Edit NGOs</h3>
       <hr />
-      <form action='update_chw' class="course_creation" method="POST">
+      <form action='update_ngo' class="course_creation" method="POST">
         {% csrf_token %}
         <div class="form-row">
           <div class="form-group col-md-12">
-            <label for="inputID">ID</label>
-            <input
-              type="text"
-              class="form-control"
-              id="inputID"
-              value="{{ entry.id }}"
-              name="inputID"
-              required
-            />
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group col-md-12">
-            <label for="inputName">Full Name</label>
+            <label for="inputName">Name</label>
             <input
               type="text"
               class="form-control"
               id="inputName"
-              value="{{ entry.name }}"
+              value="{{ entry.ngo_name }}"
               name="inputName"
-              required
+              readonly
             />
           </div>
         </div>
 
+
         <div class="form-row">
           <div class="form-group col-md-4">
-            <label for="inputAge">Age</label>
-            <input
-              type="number"
-              class="form-control"
-              id="inputAge"
-              value="{{ entry.age }}"
-              name="inputAge"
-              required
-            />
-          </div>
-          <div class="form-group col-md-8">
-            <label for="inputRegion">Region</label>
+            <label for="inputShortCode">Short Code</label>
             <input
               type="text"
               class="form-control"
-              id="inputRegion"
-              value="{{ entry.region }}"
-              name="inputRegion"
+              id="inputShortCode"
+              value="{{ entry.ngo_shortCode }}"
+              name="inputShortCode"
+              readonly
+            />
+          </div>
+          <div class="form-group col-md-8">
+            <label for="inputContactPoint">Contact Point</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inputContactPoint"
+              value="{{ entry.contact_point }}"
+              name="inputContactPoint"
               required
             />
-              <input type="hidden" name="id" value={{ entry.id }}>
           </div>
         </div>
 
@@ -99,6 +85,7 @@
           >
             Save NGO
           </button>
+            <a href="{% url 'ngo_admin_delete_ngo' entry.ngo_shortCode %} " class="btn btn-danger">Delete</a>
         </div>
       </form>
     </div>
