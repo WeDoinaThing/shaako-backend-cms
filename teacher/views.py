@@ -426,9 +426,8 @@ def delete_ngo(request, pk):
     failed = False
     success = False
 
-    print(pk)
+    print("__"+pk+"__")
     selectedNGO = NGO.objects.get(ngo_shortCode=pk)
-    print(selectedNGO.ngo_name)
     selectedNGO.delete()
     if request.user.is_authenticated and request.user.is_superadmin:
         ngo_list = NGO.objects.all()
