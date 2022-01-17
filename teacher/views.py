@@ -12,6 +12,7 @@ from .utils import send_async_mail
 from django.views.decorators.csrf import csrf_exempt
 import calendar
 import hashlib
+from django.http import JsonResponse
 
 def ngo_admin_home(request):
     if request.method == "POST":
@@ -445,3 +446,25 @@ def edit_ngo_admin(request):
                 "is_superadmin": request.user.is_superadmin,
             },
         )
+
+def verify_access_token(request):
+    token = request.GET.get("token")
+    try:
+        chw = CHW.objects.get(access_token=token)
+        return JsonResponse(
+            {
+                "id":chw.id,
+                "name":chw.name,
+                "age":chw.age,
+                "region":chw.region,
+                "ngo":chw.ngo.ngo_name,
+                "addedBy":chw.addedBy.name,
+            }
+        )
+    except:
+        return JsonResponse(
+            {
+                "Invalid Response"
+            }
+        )
+
