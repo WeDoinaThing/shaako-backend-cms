@@ -1,9 +1,10 @@
+import json
+import mimetypes
 from statistics import mode
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from teacher import models
 from teacher.models import NGO, NGO_Admin, CHW, Content, User
-from django.core import serializers
 import datetime
 from django.db import IntegrityError
 from collections import OrderedDict
@@ -14,6 +15,7 @@ import calendar
 import hashlib
 from django.http import JsonResponse
 from django.core import serializers
+from django.forms.models import model_to_dict
 
 def ngo_admin_home(request):
     if request.method == "POST":
@@ -452,16 +454,21 @@ def verify_access_token(request):
     token = request.GET.get("token")
     try:
         chw = CHW.objects.get(access_token=token)
-        serialized_chw = serializers.serialize('json', [chw,])
-        
-        return JsonResponse(
-                serialized_chw,
-                safe=False,
-        )
-    except:
         return JsonResponse(
             {
-                "Invalid Response",
+                "id":chw.id,
+                "name":chw.name,
+                "age":chw.age,
+                "region":chw.region,
+                "ngo":chw.ngo.ngo_name,
+                "addedBy":chw.addedBy.name,
+            },
+            safe=False
+        )
+    except CHW.DoesNotExist as e:
+        return JsonResponse(
+            {
+                "response":"Invalid Request",
             },
             safe=False
         )
