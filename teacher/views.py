@@ -463,6 +463,7 @@ def verify_access_token(request):
                 "ngo":chw.ngo.ngo_name,
                 "addedBy":chw.addedBy.name,
             },
+            status=200,      
             safe=False
         )
     except CHW.DoesNotExist as e:
@@ -470,6 +471,7 @@ def verify_access_token(request):
             {
                 "response":"Invalid Request",
             },
+            status=404,
             safe=False
         )
 
@@ -484,12 +486,14 @@ def get_content(request):
 
         return HttpResponse(
             content_json,
-            content_type='application/json'        
+            content_type='application/json',
+            status=200,      
         )
     except CHW.DoesNotExist as e:
         return JsonResponse(
             {
-                "response":"Invalid Request",
+                'error': 'The resource was not found'
             },
+            status=404,
             safe=False
         )
