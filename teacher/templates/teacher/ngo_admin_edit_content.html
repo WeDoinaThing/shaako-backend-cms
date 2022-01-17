@@ -25,7 +25,7 @@
     <div class="card-body">
       <h3 class="card-title" style="text-align: center">Edit Content</h3>
       <hr />
-      <form class="course_creation" method="POST">
+      <form action='update_content' class="course_creation" method="POST">
         {% csrf_token %}
         <div class="form-row">
           <div class="form-group col-md-12">
@@ -34,7 +34,7 @@
               type="text"
               class="form-control"
               id="inputContentTitle"
-              placeholder="Enter Valid Content Title"
+              value="{{ entry.title }}"
               name="inputContentTitle"
               required
             />
@@ -47,7 +47,7 @@
             type="text"
             class="form-control"
             id="inputContentLink"
-            placeholder="Enter Valid URL"
+            value="{{ entry.associated_link }}"
             name="inputContentLink"
             required
           />
@@ -59,7 +59,7 @@
             type="text"
             class="form-control"
             id="inputCampaignDetails"
-            placeholder="Enter Valid Content Details"
+            value="{{ entry.details }}"
             name="inputCampaignDetails"
             required
           />
@@ -71,11 +71,12 @@
             type="date"
             class="form-control"
             min="{{ current_date }}"
-            placeholder="dd/mm/yyyy"
+            value={{ entry.date | date:"Y-m-d"}}
             id="inputDate"
             name="inputDate"
             required
           />
+            <input type="hidden" name="id" value={{ entry.id }}>
         </div>
 
         <br />
@@ -87,7 +88,7 @@
             value="submit"
             required
           >
-            Create Content
+            Update Content
           </button>
         </div>
       </form>
