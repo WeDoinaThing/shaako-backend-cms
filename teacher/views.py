@@ -1,9 +1,10 @@
+import json
+import mimetypes
 from statistics import mode
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from teacher import models
 from teacher.models import NGO, NGO_Admin, CHW, Content, User
-from django.core import serializers
 import datetime
 from django.db import IntegrityError
 from collections import OrderedDict
@@ -13,6 +14,8 @@ from django.views.decorators.csrf import csrf_exempt
 import calendar
 import hashlib
 from django.http import JsonResponse
+from django.core import serializers
+from django.forms.models import model_to_dict
 
 def ngo_admin_home(request):
     if request.method == "POST":
@@ -531,12 +534,38 @@ def verify_access_token(request):
                 "region":chw.region,
                 "ngo":chw.ngo.ngo_name,
                 "addedBy":chw.addedBy.name,
-            }
+            },
+            status=200,      
+            safe=False
         )
-    except:
+    except CHW.DoesNotExist as e:
         return JsonResponse(
             {
-                "Invalid Response"
-            }
+                "response":"Invalid Request",
+            },
+            status=404,
+            safe=False
         )
 
+def get_content(request):
+    token = request.GET.get("token")
+    try:
+        chw = CHW.objects.get(access_token=token)
+        ngo_admin = chw.addedBy
+        ngo = ngo_admin.ngo
+        contents = Content.objects.filter(added_by__ngo=ngo, date__gte=datetime.datetime.now().date())
+        content_json = serializers.serialize("json",contents)
+
+        return HttpResponse(
+            content_json,
+            content_type='application/json',
+            status=200,      
+        )
+    except CHW.DoesNotExist as e:
+        return JsonResponse(
+            {
+                'error': 'The resource was not found'
+            },
+            status=404,
+            safe=False
+        )

@@ -21,4 +21,5 @@ urlpatterns = [
     path('edit_ngo_admin', views.edit_ngo_admin, name="super_admin_edit_ngo_admin"),
 
     path('verify_access_token', views.verify_access_token, name="verify_access_token"),
+    path('get_content',views.get_content, name="get_content"),
 ]
