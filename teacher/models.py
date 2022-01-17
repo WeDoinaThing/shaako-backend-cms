@@ -34,28 +34,6 @@ class CHW(models.Model):
     def __str__(self):
         return self.name + "_" + self.id
 
-    # def print_all_params(self):
-    #     print(self.course_type)
-    #     print(self.course_code)
-    #     print(self.course_title)
-    #     print(self.course_credit)
-    #     print(self.teacher.all())
-    #     print(self.committee)
-    #     print(self.year)
-
-
-# @django.dispatch.receiver(models.signals.pre_save, sender=Committee)
-# def set_default_committee_id(sender, instance, *args, **kwargs):
-#     """
-#     :param sender: The class that sent the signal.
-#     :param instance: The instance that is being initialised.
-#     :return: None.
-#     """
-#     instance.committee_id = (
-#         str(instance.year) + "_" + instance.semester + "_" + get_random_id(10)
-#     )
-
-
 class Content(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(blank=False, max_length=1024)

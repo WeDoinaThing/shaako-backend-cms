@@ -55,27 +55,25 @@
   style="color: #eeeeee"
   >NGOs</a
 >
-
 <a
   class="anim nav-link active"
   href="{% url 'super_admin_ngo_member' %} "
   style="color: #eeeeee"
   >NGO Members</a
 >
-
 {% endif %} 
 {% endblock %} {% block body %}
 
 <div class="container" style="padding-top: 20px; padding-bottom: 10px">
-  <h3 style="text-align: center">NGOs</h3>
+  <h3 style="text-align: center">NGO Admin Accounts</h3>
 
   <div class="container">
     <h5 style="text-align: center">
-      Enlisted NGOs
+      Enlisted NGO Admins
     </h5>
 
     <div style="align-self: center;  text-align: center;">
-        <a class="btn btn-primary" href="{% url 'super_admin_create_ngo' %}" role="button">Create New NGOs</a>
+        <a class="btn btn-primary" href="{% url 'super_admin_create_ngo_admin' %}" role="button">Create New NGO Admin Account</a>
       </div>
   </div>
 
@@ -89,17 +87,17 @@
   >
     <thead class="thead-dark">
       <tr>
-        <th scope="col">NGO Name</th>
-        <th scope="col">NGO Detail</th>
-        <th scope="col">Contact Point</th>
+        <th scope="col">Member User</th>
+        <th scope="col">Member Name</th>
+        <th scope="col">Member NGO</th>
       </tr>
     </thead>
     <tbody>
-      {% for ngo in ngo_list %}
+      {% for member in ngo_members %}
       <tr data-toggle="modal" data-target="#tbModal" class="trNGOs">
-        <td class="name">{{ ngo.ngo_name }}</td>
-        <td class="shortcode">{{ ngo.ngo_shortCode }}</td>
-        <td class="contactpoint">{{ ngo.contact_point }}</td>
+        <td class="user">{{ member.user }}</td>
+        <td class="name">{{ member.name }}</td>
+        <td class="ngo">{{ member.ngo }}</td>
       </tr>
       {% endfor%}
     </tbody>
@@ -109,7 +107,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="gfgmodallabel" style"text-align: center">Selected NGO Admin</h5>
+        <h5 class="modal-title" id="gfgmodallabel" style"text-align: center">Selected NGO</h5>
         <button
           type="button"
           class="close"
@@ -139,23 +137,23 @@
 <script>
   $(function () {
     $(".trNGOs").click(function () {
+        var user = $(this).find(".user").text();
         var name = $(this).find(".name").text();
-        var shortcode = $(this).find(".shortcode").text();
-        var contactpoint = $(this).find(".contactpoint").text();
+        var ngo = $(this).find(".ngo").text();
 
         var p = "";
-        p += "<form action='edit_ngo' method='POST'>"
+        p += "<form action='edit_ngo_admin' method='POST'>"
 
-		    p += '<div class="container">'
-        p += '<h5 style="text-align: center" name="name">' + name + "</h5>";
-        p += '<h2 style="text-align: center" name="shortcode">' + shortcode + "</h2>";
-        p += '<h5 style="text-align: center" name="contactpoint">' + contactpoint + "</h5>";
+		p += '<div class="container">'
+        p += '<h5 style="text-align: center" name="user">' + user + "</h5>";
+        p += '<h2 style="text-align: center" name="name">' + name + "</h2>";
+        p += '<h5 style="text-align: center" name="ngo">' + ngo + "</h5>";
 
+        p += '<input type="hidden" name="user" value="'+user+'"/>'
         p += '<input type="hidden" name="name" value="'+name+'"/>'
-        p += '<input type="hidden" name="shortcode" value="'+shortcode+'"/>'
-        p += '<input type="hidden" name="contactpoint" value="'+contactpoint+'"/>'
+        p += '<input type="hidden" name="ngo" value="'+ngo+'"/>'
 		p += '<br/>'
-        p += '<button type="submit" class="btn btn-success btn-lg btn-block" value="submit">Edit Content.</button>'
+        p += '<button type="submit" class="btn btn-danger btn-lg btn-block" value="submit">Delete Member.</button>'
         p += "</form>"
         p += '</div>'
         $("#divGFG").empty();
