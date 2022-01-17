@@ -13,6 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 import calendar
 import hashlib
 from django.http import JsonResponse
+from django.core import serializers
 
 def ngo_admin_home(request):
     if request.method == "POST":
@@ -451,20 +452,17 @@ def verify_access_token(request):
     token = request.GET.get("token")
     try:
         chw = CHW.objects.get(access_token=token)
+        serialized_chw = serializers.serialize('json', [chw,])
+        
         return JsonResponse(
-            {
-                "id":chw.id,
-                "name":chw.name,
-                "age":chw.age,
-                "region":chw.region,
-                "ngo":chw.ngo.ngo_name,
-                "addedBy":chw.addedBy.name,
-            }
+                serialized_chw,
+                safe=False,
         )
     except:
         return JsonResponse(
             {
-                "Invalid Response"
-            }
+                "Invalid Response",
+            },
+            safe=False
         )
 
