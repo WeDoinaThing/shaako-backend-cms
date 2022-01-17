@@ -473,3 +473,23 @@ def verify_access_token(request):
             safe=False
         )
 
+def get_content(request):
+    token = request.GET.get("token")
+    try:
+        chw = CHW.objects.get(access_token=token)
+        ngo_admin = chw.addedBy
+        ngo = ngo_admin.ngo
+        contents = Content.objects.filter(added_by__ngo=ngo, date__gte=datetime.datetime.now().date())
+        content_json = serializers.serialize("json",contents)
+
+        return HttpResponse(
+            content_json,
+            content_type='application/json'        
+        )
+    except CHW.DoesNotExist as e:
+        return JsonResponse(
+            {
+                "response":"Invalid Request",
+            },
+            safe=False
+        )
