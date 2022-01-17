@@ -32,7 +32,7 @@
     <div class="card-body">
       <h3 class="card-title" style="text-align: center">Edit Profile</h3>
       <hr />
-      <form class="course_creation" method="POST">
+      <form action='update_chw' class="course_creation" method="POST">
         {% csrf_token %}
         <div class="form-row">
           <div class="form-group col-md-12">
@@ -41,7 +41,7 @@
               type="text"
               class="form-control"
               id="inputID"
-              placeholder="Enter Organization ID for Employee"
+              value={{ entry.id }}
               name="inputID"
               required
             />
@@ -55,7 +55,7 @@
               type="text"
               class="form-control"
               id="inputName"
-              placeholder="Enter Employee Name"
+              value={{ entry.name }}
               name="inputName"
               required
             />
@@ -69,7 +69,7 @@
               type="number"
               class="form-control"
               id="inputAge"
-              placeholder="Enter Employee Age"
+              value={{ entry.age }}
               name="inputAge"
               required
             />
@@ -80,10 +80,11 @@
               type="text"
               class="form-control"
               id="inputRegion"
-              placeholder="Enter Employee Assigned Region"
+              value={{ entry.region }}
               name="inputRegion"
               required
             />
+              <input type="hidden" name="id" value={{ entry.id }}>
           </div>
         </div>
 
@@ -96,7 +97,7 @@
             value="submit"
             required
           >
-            Edit Profile
+            Save Profile
           </button>
         </div>
       </form>
