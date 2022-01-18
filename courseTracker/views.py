@@ -11,6 +11,7 @@ def landing(request):
             return redirect("ngo_admin_home")
 
     else:
+        print("Not Authenticated")
         return redirect("login")
 
 
@@ -36,10 +37,16 @@ def home_login(request):
             auth.login(request, user)
             if user.is_authenticated:
                 if user.is_superadmin:
+                    print("Super Admins")
                     return redirect("super_admin_home")
                 else:
+                    print("NGO Admin")
                     return redirect("ngo_admin_home")
+            else:
+                print("Not Authenticated")
+
         else:
+            print("Not Found")
             return redirect("login")
 
     return render(request, "login.html")

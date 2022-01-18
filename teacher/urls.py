@@ -21,4 +21,5 @@ urlpatterns = [
     path('delete_ngo_admin', views.delete_ngo_admin, name="super_admin_delete_ngo_admin"),
 
     path('verify_access_token', views.verify_access_token, name="verify_access_token")
+    path('get_content',views.get_content, name="get_content"),
 ]
