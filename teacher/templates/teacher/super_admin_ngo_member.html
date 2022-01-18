@@ -142,23 +142,48 @@
         var ngo = $(this).find(".ngo").text();
 
         var p = "";
-        p += "<form action='edit_ngo_admin' method='POST'>"
+
 
 		p += '<div class="container">'
         p += '<h5 style="text-align: center" name="user">' + user + "</h5>";
         p += '<h2 style="text-align: center" name="name">' + name + "</h2>";
         p += '<h5 style="text-align: center" name="ngo">' + ngo + "</h5>";
 
-        p += '<input type="hidden" name="user" value="'+user+'"/>'
-        p += '<input type="hidden" name="name" value="'+name+'"/>'
-        p += '<input type="hidden" name="ngo" value="'+ngo+'"/>'
 		p += '<br/>'
-        p += '<button type="submit" class="btn btn-danger btn-lg btn-block" value="submit">Delete Member.</button>'
-        p += "</form>"
+        p += '<button id="delete_btn" class="btn btn-danger btn-lg btn-block" value="submit">Delete Member.</button>'
         p += '</div>'
         $("#divGFG").empty();
         $("#divGFG").append(p);
+
+         $(function () {
+            $("#delete_btn").click(function () {
+
+                var p = "";
+
+
+                p += "<form action='delete_ngo_admin' method='POST'>"
+
+                p += '<div class="container">'
+
+                p += '<h5 style="text-align: center" name="user">' + user + "</h5>";
+        p += '<h2 style="text-align: center" name="name">' + name + "</h2>";
+        p += '<h5 style="text-align: center" name="ngo">' + ngo + "</h5>";
+
+                p += '<input type="hidden" name="user" value="'+user+'"/>'
+                p += '<input type="hidden" name="name" value="'+name+'"/>'
+                p += '<input type="hidden" name="ngo" value="'+ngo+'"/>'
+                p += '<br/>'
+                p += '<button type="submit" class="btn btn-danger btn-lg btn-block" value="submit">Confirm Delete</button>'
+                p += "</form>"
+                p += '</div>'
+
+                $("#divGFG").empty();
+                $("#divGFG").append(p);
     });
   });
+    });
+  });
+
+
 </script>
 {% endblock %}
