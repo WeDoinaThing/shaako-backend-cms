@@ -10,7 +10,7 @@ This will install the depedencies required to run the project.
 Then run the following commands in succession:
 ```
 python manage.py makemigrations
-python manage.py migrate
+python manage.py migrate --run-syncdb
 ```
 These will create the database required for the project.
 Then create a superuser with following command:
