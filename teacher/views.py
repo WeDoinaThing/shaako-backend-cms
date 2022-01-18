@@ -514,15 +514,14 @@ def create_ngo_admin(request):
         )
 
 @csrf_exempt
-def edit_ngo_admin(request):
+def delete_ngo_admin(request):
     if request.user.is_authenticated and request.user.is_superadmin:
-        return render(
-            request,
-            "teacher/super_admin_edit_ngo_admin.html",
-            {
-                "is_superadmin": request.user.is_superadmin,
-            },
-        )
+        print(request.POST.get("user"))
+        selectedUser = User.objects.get(email=request.POST.get("user"))
+        selectedNGOAdmin = NGO_Admin.objects.get(user=selectedUser)
+        print(selectedNGOAdmin.name)
+        selectedNGOAdmin.delete()
+        return redirect("/ngo_admin/super_admin_ngo_member")
 
 def verify_access_token(request):
     token = request.GET.get("token")

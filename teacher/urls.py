@@ -18,8 +18,8 @@ urlpatterns = [
     path('delete_ngo/<str:pk>/', views.delete_ngo, name='ngo_admin_delete_ngo'),
     path('super_admin_ngo_member', views.super_admin_ngo_member, name="super_admin_ngo_member"),
     path('create_ngo_admin', views.create_ngo_admin, name="super_admin_create_ngo_admin"),
-    path('edit_ngo_admin', views.edit_ngo_admin, name="super_admin_edit_ngo_admin"),
+    path('delete_ngo_admin', views.delete_ngo_admin, name="super_admin_delete_ngo_admin"),
 
-    path('verify_access_token', views.verify_access_token, name="verify_access_token"),
+    path('verify_access_token', views.verify_access_token, name="verify_access_token")
     path('get_content',views.get_content, name="get_content"),
 ]
