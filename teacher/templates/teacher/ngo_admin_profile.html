@@ -1,0 +1,137 @@
+<!-- @format -->
+{% extends "base.html" %}{% load static %} {% load template_filters %}
+<!-- prettier-ignore -->
+{% block head %} {% endblock %}
+{% block navcontent %}
+
+{% if is_ngo_admin %}
+<a
+  class="anim nav-link active"
+  href="{% url 'ngo_admin_home' %} "
+  style="color: #eeeeee"
+  >Dashboard</a
+>
+
+<a
+  class="anim nav-link active"
+  href="{% url 'ngo_admin_chw' %} "
+  style="color: #eeeeee"
+  >Health Workers</a
+>
+
+    <a
+  class="anim nav-link active"
+  href="{% url 'ngo_admin_profile' %} "
+  style="color: #eeeeee"
+  >Profile</a
+>
+
+{% endif %} {% endblock %} {% block body %}
+
+<div class="container" style="padding-top: 20px; padding-bottom: 10px">
+	{% if failed %}
+	<div class="alert alert-danger" role="alert">
+		Content adding failed. Check if it exists already!
+	</div>
+	{% endif %} {% if success %}
+	<div class="alert alert-success" role="alert">
+		Content adding successful.
+	</div>
+	{% endif %}
+	<div class="card" style="padding-left: 30px; padding-right: 30px">
+		<div class="card-body">
+			<h3 class="card-title" style="text-align: center">NGO Admin Profile</h3>
+			<hr />
+			<form action='update_profile' class="course_creation" method="POST">
+				{% csrf_token %}
+				<div class="form-row">
+					<div class="form-group col-md-12">
+						<label for="inputEmail">Email</label>
+						<input
+							type="text"
+							class="form-control"
+							id="inputEmail"
+							value = "{{ admin_user.email }}"
+							name="inputEmail"
+							readonly
+						/>
+					</div>
+				</div>
+
+
+				<div class="form-row">
+					<div class="form-group col-md-12">
+						<label for="inputName">Full Name</label>
+						<input
+							type="text"
+							class="form-control"
+							id="inputName"
+							value = "{{ content.name }}"
+							name="inputName"
+							readonly
+						/>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label for="inputRegion">Area</label>
+					<input
+					type="text"
+					class="form-control"
+					id="inputRegion"
+					value = "{{ content.region }}"
+					name="inputRegion"
+					readonly
+				/>
+				</div>
+
+                <div class="form-group">
+					<label for="inputRegion">NGO</label>
+					<input
+					type="text"
+					class="form-control"
+					id="inputNgo"
+					value = "{{ content.ngo }}"
+					name="inputRegion"
+					readonly
+				/>
+				</div>
+
+				<div class="col text-center">
+					<button
+                            id="edit_btn"
+                            type="button"
+						class="btn btn-success"
+						style="text-align: center"
+						readonly
+					>
+						Edit Profile
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  $(function () {
+    $("#edit_btn").click(function () {
+        $("#edit_btn").text("Save Profile");
+        $("#inputName").prop("readonly", false);
+        //$("#inputEmail").prop("readonly", false);
+
+        $(function () {
+    $("#edit_btn").click(function () {
+        $("#edit_btn").text("Save Profile");
+        $('#edit_btn').removeAttr("type").attr("type", "submit");
+    });
+  });
+    });
+  });
+
+
+</script>
+{% endblock %}

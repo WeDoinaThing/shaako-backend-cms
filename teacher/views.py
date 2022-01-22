@@ -48,9 +48,83 @@ def ngo_admin_home(request):
         print("Not Authenticated")
         return redirect("login")
 
+
+def ngo_admin_profile(request):
+    if request.method == "POST":
+        return redirect("ngo_admin_edit_content")
+
+    if request.user.is_authenticated:
+        ngo_admin = NGO_Admin.objects.get(user=request.user)
+        ngo_admin_user = ngo_admin.user
+
+        return render(
+            request,
+            "teacher/ngo_admin_profile.html",
+            {
+                "is_ngo_admin": True,
+                "content": ngo_admin,
+                "admin_user": ngo_admin_user
+            },
+        )
+    else:
+        print("Not Authenticated")
+        return redirect("login")
+
+
+def update_profile(request):
+    failed = False
+    success = False
+    if request.method == "POST":
+        email = request.POST.get("inputEmail")
+        name = request.POST.get("inputName")
+
+        print(name)
+
+        selectedUser = User.objects.get(email=email)
+        selectedNGOAdmin = NGO_Admin.objects.get(user=selectedUser)
+        try:
+            selectedNGOAdmin.name = name
+
+            selectedNGOAdmin.save()
+            success = True
+            failed = False
+
+        except Exception as e:
+            print(e)
+            success = False
+            failed = True
+
+    if request.user.is_authenticated:
+
+        ngo_admin = NGO_Admin.objects.get(user=request.user)
+        contents = Content.objects.filter(added_by=ngo_admin)
+
+        campaignDeadlineOver = Content.objects.filter(
+            added_by=ngo_admin,
+            date__lt=datetime.datetime.now().date()
+        )
+
+        campaignDeadlineFuture = Content.objects.filter(
+            added_by=ngo_admin,
+            date__gte=datetime.datetime.now().date()
+        )
+
+        return render(
+            request,
+            "teacher/ngo_admin_dashboard.html",
+            {
+                "is_ngo_admin": True,
+                "future_campaign": campaignDeadlineFuture,
+                "past_campagin": campaignDeadlineOver
+            },
+        )
+    else:
+        return redirect("login")
+
 @csrf_exempt
 def edit_content(request):
     if request.method == "POST":
+        print("Chole Elam")
         print(request.POST.get("id"))
         print(request.POST.get("title"))
         print(request.POST.get("details"))
@@ -77,7 +151,6 @@ def update_content(request):
         date = request.POST.get("inputDate")
         
         print(request.POST.get("id"))
-        print("Haha")
 
         selectedCampaign = Content.objects.get(id=request.POST.get("id"))
         try:

@@ -3,6 +3,8 @@ from . import views
 
 urlpatterns = [
     path('', views.ngo_admin_home, name='ngo_admin_home'),
+    path('profile', views.ngo_admin_profile, name='ngo_admin_profile'),
+    path('update_profile', views.update_profile, name='ngo_admin_update_profile'),
     path('create_content', views.create_content, name='ngo_admin_create_content'),
     path('edit_content', views.edit_content, name='ngo_admin_edit_content'),
     path('update_content', views.update_content, name='ngo_admin_update_content'),
@@ -21,5 +23,5 @@ urlpatterns = [
     path('delete_ngo_admin', views.delete_ngo_admin, name="super_admin_delete_ngo_admin"),
 
     path('verify_access_token', views.verify_access_token, name="verify_access_token"),
-    path('get_content',views.get_content, name="get_content"),
+    path('get_content',views.get_content, name="get_content")
 ]
