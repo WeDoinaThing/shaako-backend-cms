@@ -829,11 +829,9 @@ def get_quiz(request):
         quizzes = Quiz.objects.filter(added_by__ngo=ngo, date__gte=datetime.datetime.now().date())
         
         quiz_list = list()
-        i = 0
         for quiz in quizzes:
-            item = {"id": i}
+            item = {"id": quiz.id}
             item["title"] = quiz.title
-            i+=1
             jsonDec = json.decoder.JSONDecoder()
             quizzes_list = jsonDec.decode(quiz.quizzes)
             item["quizzes"]= quizzes_list
