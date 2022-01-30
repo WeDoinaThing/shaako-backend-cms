@@ -8,6 +8,10 @@ urlpatterns = [
     path('create_content', views.create_content, name='ngo_admin_create_content'),
     path('edit_content', views.edit_content, name='ngo_admin_edit_content'),
     path('update_content', views.update_content, name='ngo_admin_update_content'),
+    path('quizboard', views.ngo_admin_quizboard, name='ngo_admin_quizboard'),
+    path('create_quiz', views.create_quiz, name='ngo_admin_create_quiz'),
+    path('edit_quiz', views.edit_quiz, name='ngo_admin_edit_quiz'),
+    path('update_quiz', views.update_quiz, name='ngo_admin_update_quiz'),
     path('health_worker', views.ngo_admin_chw, name='ngo_admin_chw'),
     path('create_chw', views.create_chw, name='ngo_admin_create_chw'),
     path('edit_chw', views.edit_chw, name='ngo_admin_edit_chw'),
@@ -23,5 +27,6 @@ urlpatterns = [
     path('delete_ngo_admin', views.delete_ngo_admin, name="super_admin_delete_ngo_admin"),
 
     path('verify_access_token', views.verify_access_token, name="verify_access_token"),
-    path('get_content',views.get_content, name="get_content")
+    path('get_content',views.get_content, name="get_content"),
+    path('get_quiz',views.get_quiz, name="get_quiz"),
 ]

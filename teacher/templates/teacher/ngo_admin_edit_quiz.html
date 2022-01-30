@@ -1,0 +1,162 @@
+<!-- @format -->
+{% extends "base.html" %}{% load static %} {% load template_filters %}
+<!-- prettier-ignore -->
+{% block head %} {% endblock %}
+{% block navcontent %}
+
+{% if is_ngo_admin %}
+<a
+  class="anim nav-link active"
+  href="{% url 'ngo_admin_home' %} "
+  style="color: #eeeeee"
+  >Content</a
+>
+
+<a
+  class="anim nav-link active"
+  href="{% url 'ngo_admin_quizboard' %} "
+  style="color: #eeeeee"
+  >Quiz</a
+>
+<a
+  class="anim nav-link active"
+  href="{% url 'ngo_admin_chw' %} "
+  style="color: #eeeeee"
+  >Health Workers</a
+>
+
+<a
+class="anim nav-link active"
+href="{% url 'ngo_admin_profile' %} "
+style="color: #eeeeee"
+>Profile</a
+>
+
+{% endif %} {% endblock %} {% block body %}
+
+<div class="container" style="padding-top: 20px; padding-bottom: 10px">
+	{% if failed %}
+	<div class="alert alert-danger" role="alert">
+		Content adding failed. Check if it exists already!
+	</div>
+	{% endif %} {% if success %}
+	<div class="alert alert-success" role="alert">
+		Content adding successful.
+	</div>
+	{% endif %}
+	<div class="card" style="padding-left: 30px; padding-right: 30px">
+		<div class="card-body">
+			<h3 class="card-title" style="text-align: center">Edit Quiz</h3>
+			<hr />
+			<form action="update_quiz" class="course_creation" method="POST">
+				{% csrf_token %}
+				<div class="form-row">
+					<div class="form-group col-md-12">
+						<label for="inputContentTitle">Quiz Title</label>
+						<input
+							type="text"
+							class="form-control"
+							id="inputQuizTitle"
+							placeholder="Enter Valid Quiz Title"
+							name="inputQuizTitle"
+              value="{{ title }}"
+							required
+						/>
+					</div>
+				</div>
+        {% for question, choices, answer in quizzes %}
+          <div id="quiz_fields">
+            <div class="form-group col-md-12">
+              <div class='label'>Quiz {{ forloop.counter }}:</div>
+              <div class="container">
+                <label >Question</label>
+                <input type="text" class="form-control" id="inputQuizQuestion" placeholder="Enter Question" name="inputQuizQuestion" value="{{ question }}" required/>
+              </div>
+              <div class="container">
+                <label >Choices(Comma Separated): </label>
+                <input type="text" class="form-control" id="inputQuizChoices" placeholder="Enter Answers, Comma Separated" name="inputQuizChoices" value="{{ choices }}" required/>
+              </div>
+              <div class="container">
+                <label >Correct Answer(Enter Index i.e: 1,2,3,4): </label>
+                <input type="number" class="form-control" id="inputQuizAnswer" placeholder="Enter Correct Answer Index" name="inputQuizAnswer" value="{{ answer }}" required/>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+				<div style="display: flex; text-align: center;">
+					<div class="col text-center" >
+						<button
+							type="button"
+							class="btn btn-success"
+							id="more_fields" 
+							onclick="add_fields();"
+							style="text-align: center"
+							value="Add More"
+						>
+							Add Quiz
+						</button>
+					</div>
+
+					<div class="col text-center" >
+						<button
+							type="button"
+							class="btn btn-danger"
+							id="more_fields" 
+							onclick="remove_fields();"
+							style="text-align: center"
+							value="Remove More"
+						>
+							Remove Quiz
+						</button>
+					</div>
+				</div>
+				
+        <div class="form-group">
+          <label for="datepicker">Campaign Expiration</label>
+          <input
+            type="date"
+            class="form-control"
+            min="{{ current_date }}"
+            value={{ entry.date | date:"Y-m-d"}}
+            id="inputDate"
+            name="inputDate"
+            required
+          />
+          <input type="hidden" name="id" value={{ entry.id }}>
+        </div>
+
+				
+				<br />
+				<div class="col text-center">
+					<button
+						type="submit"
+						class="btn btn-success"
+						style="text-align: center"
+						value="submit"
+						required
+					>
+						Update Quiz
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+{% endblock %} {% block scripts %} 
+<script>
+	var question = 1;
+	function add_fields() {
+		question++;
+		var objTo = document.getElementById('quiz_fields')
+		var divtest = document.createElement("div");
+		divtest.innerHTML = ' <div id="quiz_fields"> <div class="form-group col-md-12"> <div class="label">Quiz '+question+':</div> <div class="container"> <label >Question</label> <input type="text" class="form-control" id="inputQuizQuestion" placeholder="Enter Question" name="inputQuizQuestion" value="" required/> </div> <div class="container"> <label >Choices(Comma Separated): </label> <input type="text" class="form-control" id="inputQuizChoices" placeholder="Enter Answers, Comma Separated" name="inputQuizChoices" value="" required/> </div> <div class="container"> <label >Correct Answer(Enter Index i.e: 1,2,3,4): </label> <input type="number" class="form-control" id="inputQuizAnswer" placeholder="Enter Correct Answer Index" name="inputQuizAnswer" value="" required/> </div> </div> </div>'
+		objTo.appendChild(divtest)
+	}
+
+	function remove_fields() {
+		var select = document.getElementById('quiz_fields');
+		select.removeChild(select.lastChild);
+	}
+</script>
+{% endblock %}

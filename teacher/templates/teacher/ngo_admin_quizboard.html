@@ -62,33 +62,33 @@
   style="color: #eeeeee"
   >Quiz</a
 >
-
 <a
   class="anim nav-link active"
   href="{% url 'ngo_admin_chw' %} "
   style="color: #eeeeee"
   >Health Workers</a
 >
-<a
-class="anim nav-link active"
-href="{% url 'ngo_admin_profile' %} "
-style="color: #eeeeee"
->Profile</a
+
+    <a
+  class="anim nav-link active"
+  href="{% url 'ngo_admin_profile' %} "
+  style="color: #eeeeee"
+  >Profile</a
 >
 
 {% endif %} 
 {% endblock %} {% block body %}
 
 <div class="container" style="padding-top: 20px; padding-bottom: 10px">
-  <h3 style="text-align: center">Health Workers</h3>
+  <h3 style="text-align: center">Quiz</h3>
 
   <div class="container" style="align-self: center;  text-align: center; padding: 20px;">
-    <a class="btn btn-primary" href="{% url 'ngo_admin_create_chw' %}" role="button">Create New Health Worker Profile</a>
+    <a class="btn btn-primary" href="{% url 'ngo_admin_create_quiz' %}" role="button">Create New Quiz</a>
   </div>
 
   <div class="container">
     <h5 style="text-align: center">
-      Currently Employed Health Workers
+      Current Quiz Campaigns
     </h5>
   </div>
 
@@ -102,29 +102,59 @@ style="color: #eeeeee"
   >
     <thead class="thead-dark">
       <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Name</th>
-        <th scope="col">Region</th>
+        <th scope="col">Campaign Name</th>
+        <th scope="col">Campaign Date</th>
       </tr>
     </thead>
     <tbody>
-      {% for worker in health_workers %}
+      {% for recentCampaign in future_campaign %}
       <tr data-toggle="modal" data-target="#tbModal" class="trRecentCampaign">
-        <td class="id">{{ worker.id }}</td>
-        <td class="name">{{ worker.name }}</td>
-        <td class="region">{{ worker.region }}</td>
-        <td class="access_token" style="display:none;" >{{ worker.access_token }}</td>
-        <td class="age" style="display:none;" >{{ worker.age }}</td>
+        <td class="recentTitle">{{ recentCampaign.title }}</td>
+        <td class="recentDate">{{ recentCampaign.date }}</td>
+        <td class="recentId" style="display:none;" >{{ recentCampaign.id }}</td>
+        <td class="recentDetails" style="display:none;" >{{ recentCampaign.quizzes }}</td>
       </tr>
       {% endfor%}
     </tbody>
   </table>
 
+</br>
+  <div class="container">
+    <h5 style="text-align: center">
+      Past Quiz Campaigns
+    </h5>
+  </div>
+  <table
+  class="table"
+  id="dtHorizontalVerticalExampleWrapper"
+  class="table table-bordered table-sm"
+  cellspacing="0"
+  width="100%"
+  style="text-align: center; background-color: #ffffff"
+>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Campaign Name</th>
+      <th scope="col">Campaign Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for recentCampaign in past_campagin %}
+    <tr data-toggle="modal" data-target="#tbModal" class="trPastCampaign">
+      <td class="recentCampaignTitle">{{ recentCampaign.title }}</td>
+      <td class="recentCampaignDate">{{ recentCampaign.date }}</td>
+    </tr>
+    {% endfor%}
+  </tbody>
+</table>
+</div>
+
+
 <div class="modal fade" id="tbModal" tabindex="-1" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="gfgmodallabel" style"text-align: center">Selected Health Worker</h5>
+        <h5 class="modal-title" id="gfgmodallabel" style"text-align: center">Selected Quiz</h5>
         <button
           type="button"
           class="close"
@@ -135,7 +165,7 @@ style="color: #eeeeee"
         </button>
       </div>
       <div class="modal-body">
-	  <form class="ngo_admin_chw_edit" method="POST">
+	  <form class="deadline_completion" method="POST">
 	  {% csrf_token %}
         <div class="GFGclass" id="divGFG"></div>
 		</form>
@@ -154,35 +184,32 @@ style="color: #eeeeee"
 <script>
   $(function () {
     $(".trRecentCampaign").click(function () {
-        var id = $(this).find(".id").text();
-        var name = $(this).find(".name").text();
-        var age = $(this).find(".age").text();
-        var region = $(this).find(".region").text();
-        var access_token = $(this).find(".access_token").text();
+        var title = $(this).find(".recentTitle").text();
+        var details = $(this).find(".recentDetails").text();
+        var associated_link = $(this).find(".recentLink").text();
+        var date = $(this).find(".recentDate").text();
+        var id = $(this).find(".recentId").text();
 
         var p = "";
-        p += "<form action='edit_chw' method='POST'>"
+        p += "<form action='edit_quiz' method='POST'>"
 
 		    p += '<div class="container">'
-        p += '<h2 style="text-align: center" name="id">' + id + "</h2>";
-        p += '<h5 style="text-align: center" name="name">' + name + "</h5>";
-        p += '<h5 style="text-align: center" name="age"> Age: ' + age + "</h5>";
-        p += '<h6 style="text-align: center" name="region">' + region + "</h6>";
-        p += '</br><div style="display: flex; justify-content: center;" id ="qrcode" ></div>'
+        p += '<h2 style="text-align: center" name="code">' + title + "</h2>";
+        p += '<p style="text-align: center" name="details">' + details + "</p>";
+        p += '<h5 style="text-align: center" name="date">' + associated_link + "</h5>";
+        p += '<h5 style="text-align: center" name="date">' + date + "</h5>";
+
+        p += '<input type="hidden" name="title" value="'+title+'"/>'
+        p += '<input type="hidden" name="details" value="'+details+'"/>'
+        p += '<input type="hidden" name="associated_link" value="'+associated_link+'"/>'
         p += '<input type="hidden" name="id" value="'+id+'"/>'
-        p += '<input type="hidden" name="name" value="'+name+'"/>'
-        p += '<input type="hidden" name="age" value="'+age+'"/>'
-        p += '<input type="hidden" name="region" value="'+region+'"/>'
-		    p += '<br/>'
-        p += '<button type="submit" class="btn btn-success btn-lg btn-block" value="submit">Edit Health Worker Information.</button>'
+		p += '<br/>'
+        p += '<button type="submit" class="btn btn-success btn-lg btn-block" value="submit">Edit Quiz</button>'
         p += "</form>"
         p += '</div>'
         $("#divGFG").empty();
         $("#divGFG").append(p);
-        new QRCode(document.getElementById("qrcode"), access_token);
     });
   });
 </script>
-
-
 {% endblock %}

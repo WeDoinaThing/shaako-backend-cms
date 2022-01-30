@@ -53,3 +53,22 @@ class Content(models.Model):
 
     def __str__(self):
         return str(self.id) + "-" + str(self.title)
+
+class Quiz(models.Model):
+    id = models.AutoField(primary_key=True)
+    title = models.CharField(blank=False, max_length=1024)
+    quizzes = models.TextField(blank=True, max_length=8192)
+
+    added_by = models.ForeignKey(
+        NGO_Admin,
+        on_delete=models.SET_DEFAULT,
+        default="unassigned",
+    )
+    date = models.DateField(auto_now=False, auto_now_add=False)
+    status = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ("date",)
+
+    def __str__(self):
+        return str(self.id) + "-" + str(self.title)

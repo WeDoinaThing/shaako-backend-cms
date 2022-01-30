@@ -4,7 +4,7 @@ from statistics import mode
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from teacher import models
-from teacher.models import NGO, NGO_Admin, CHW, Content, User
+from teacher.models import NGO, NGO_Admin, CHW, Content, Quiz, User
 import datetime
 from django.db import IntegrityError
 from collections import OrderedDict
@@ -230,6 +230,182 @@ def create_content(request):
         return render(
             request,
             "teacher/ngo_admin_create_content.html",
+            {
+                "is_ngo_admin": True,
+                "current_year": year,
+                "current_date": date,
+                "success": success,
+                "failed": failed,
+            },
+        )
+    else:
+        return redirect("login")
+
+def ngo_admin_quizboard(request):
+    if request.method == "POST":
+        return redirect("ngo_admin_edit_quiz")
+        
+    if request.user.is_authenticated:
+        ngo_admin = NGO_Admin.objects.get(user=request.user)
+        quizzes = Quiz.objects.filter(added_by=ngo_admin)
+
+        campaignDeadlineOver = Quiz.objects.filter(
+            added_by=ngo_admin,
+            date__lt=datetime.datetime.now().date()
+            )
+        
+        campaignDeadlineFuture = Quiz.objects.filter(
+            added_by=ngo_admin,
+            date__gte=datetime.datetime.now().date()
+            )
+                
+        return render(
+            request,
+            "teacher/ngo_admin_quizboard.html",
+            {
+                "is_ngo_admin": True,
+                "future_campaign": campaignDeadlineFuture,
+                "past_campagin": campaignDeadlineOver,
+            },
+        )
+    else:
+        print("Not Authenticated")
+        return redirect("login")
+
+@csrf_exempt
+def edit_quiz(request):
+    if request.method == "POST":
+        selectedCampaign = Quiz.objects.get(id=request.POST.get("id"))
+        print(selectedCampaign.title) 
+        date = str(datetime.datetime.now().strftime("%Y-%m-%d"))
+        
+        question_list = []
+        answers_list = []
+        correct_list = []
+
+
+        jsonDec = json.decoder.JSONDecoder()
+        quizzes_list = jsonDec.decode(selectedCampaign.quizzes)
+
+        for quiz in quizzes_list:
+            question, answers, correct = quiz.split(";")
+            question_list.append(question)
+            answers_list.append(answers)
+            correct_list.append(correct)
+
+        quizzes = zip(question_list, answers_list, correct_list)
+
+    return render(
+        request,
+        "teacher/ngo_admin_edit_quiz.html",
+        {
+            "is_ngo_admin": True,
+            "entry": selectedCampaign,
+            "title": selectedCampaign.title,
+            "quizzes": quizzes,
+            "current_date": date,
+        },
+    )
+
+def update_quiz(request):
+    failed = False
+    success = False
+    if request.method == "POST":
+        print("Bruh")
+        title = request.POST.get("inputQuizTitle")
+        questions = request.POST.getlist("inputQuizQuestion")
+        choices = request.POST.getlist("inputQuizChoices")
+        answers = request.POST.getlist("inputQuizAnswer")
+        date = request.POST.get("inputDate")
+        quizzes = list()
+
+        for q,c,a in zip(questions, choices, answers):
+            quizzes.append(q+";"+c+";"+a)
+
+        jsonfied_quiz = json.dumps(quizzes)
+
+        selectedCampaign = Quiz.objects.get(id=request.POST.get("id"))
+        try:
+            selectedCampaign.title = title
+            selectedCampaign.quizzes = jsonfied_quiz
+            selectedCampaign.date = date
+
+            selectedCampaign.save()
+            success = True
+            failed = False
+
+        except Exception as e:
+            print(e)
+            success = False
+            failed = True
+
+    if request.user.is_authenticated:
+
+        ngo_admin = NGO_Admin.objects.get(user=request.user)
+        quizzes = Quiz.objects.filter(added_by=ngo_admin)
+
+        campaignDeadlineOver = Quiz.objects.filter(
+            added_by=ngo_admin,
+            date__lt=datetime.datetime.now().date()
+        )
+
+        campaignDeadlineFuture = Quiz.objects.filter(
+            added_by=ngo_admin,
+            date__gte=datetime.datetime.now().date()
+        )
+
+        return render(
+            request,
+            "teacher/ngo_admin_quizboard.html",
+            {
+                "is_ngo_admin": True,
+                "future_campaign": campaignDeadlineFuture,
+                "past_campagin": campaignDeadlineOver,
+            },
+        )
+    else:
+        return redirect("login")
+
+
+def create_quiz(request):
+    failed = False
+    success = False
+    if request.method == "POST":
+        title = request.POST.get("inputQuizTitle")
+        questions = request.POST.getlist("inputQuizQuestion")
+        choices = request.POST.getlist("inputQuizChoices")
+        answers = request.POST.getlist("inputQuizAnswer")
+        date = request.POST.get("inputDate")
+        quizzes = list()
+
+        for q,c,a in zip(questions, choices, answers):
+            quizzes.append(q+";"+c+";"+a)
+
+        jsonfied_quiz = json.dumps(quizzes)
+        added_by = NGO_Admin.objects.get(user=request.user)
+        try:
+            new_content = Quiz.objects.create(
+                title = title,
+                quizzes = jsonfied_quiz,
+                added_by = added_by,
+                date = date,
+            )
+            new_content.save()
+            success = True
+            failed = False
+
+        except Exception as e:
+            print(e)
+            success = False
+            failed = True
+
+    if request.user.is_authenticated:
+
+        year = str(datetime.datetime.now().year)
+        date = str(datetime.datetime.now().strftime("%Y-%m-%d"))
+        return render(
+            request,
+            "teacher/ngo_admin_create_quiz.html",
             {
                 "is_ngo_admin": True,
                 "current_year": year,
@@ -632,6 +808,39 @@ def get_content(request):
 
         return HttpResponse(
             content_json,
+            content_type='application/json',
+            status=200,      
+        )
+    except CHW.DoesNotExist as e:
+        return JsonResponse(
+            {
+                'error': 'The resource was not found'
+            },
+            status=404,
+            safe=False
+        )
+
+def get_quiz(request):
+    token = request.GET.get("token")
+    try:
+        chw = CHW.objects.get(access_token=token)
+        ngo_admin = chw.addedBy
+        ngo = ngo_admin.ngo
+        quizzes = Quiz.objects.filter(added_by__ngo=ngo, date__gte=datetime.datetime.now().date())
+        
+        quiz_list = list()
+        i = 0
+        for quiz in quizzes:
+            item = {"id": i}
+            item["title"] = quiz.title
+            i+=1
+            jsonDec = json.decoder.JSONDecoder()
+            quizzes_list = jsonDec.decode(quiz.quizzes)
+            item["quizzes"]= quizzes_list
+            quiz_list.append(item)
+
+        return HttpResponse(
+            json.dumps(quiz_list),
             content_type='application/json',
             status=200,      
         )
