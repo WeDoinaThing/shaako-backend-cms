@@ -80,7 +80,7 @@
 {% endblock %} {% block body %}
 
 <div class="container" style="padding-top: 20px; padding-bottom: 10px">
-  <h3 style="text-align: center">Content</h3>
+  <h3 style="text-align: center"><b>Content</b></h3>
 
   <div class="container" style="align-self: center;  text-align: center; padding: 20px;">
     <a class="btn btn-primary" href="{% url 'ngo_admin_create_content' %}" role="button">Create New Content</a>
@@ -114,6 +114,7 @@
         <td class="recentId" style="display:none;" >{{ recentCampaign.id }}</td>
         <td class="recentDetails" style="display:none;" >{{ recentCampaign.details }}</td>
         <td class="recentLink" style="display:none;" >{{ recentCampaign.associated_link }}</td>
+        <td class="recentTags" style="display:none;" >{{ recentCampaign.tags }}</td>
       </tr>
       {% endfor%}
     </tbody>
@@ -141,9 +142,13 @@
   </thead>
   <tbody>
     {% for recentCampaign in past_campagin %}
-    <tr data-toggle="modal" data-target="#tbModal" class="trPastCampaign">
-      <td class="recentCampaignTitle">{{ recentCampaign.title }}</td>
-      <td class="recentCampaignDate">{{ recentCampaign.date }}</td>
+    <tr data-toggle="modal" data-target="#tbModal" class="trRecentCampaign">
+      <td class="recentTitle">{{ recentCampaign.title }}</td>
+      <td class="recentDate">{{ recentCampaign.date }}</td>
+      <td class="recentId" style="display:none;" >{{ recentCampaign.id }}</td>
+      <td class="recentDetails" style="display:none;" >{{ recentCampaign.details }}</td>
+      <td class="recentLink" style="display:none;" >{{ recentCampaign.associated_link }}</td>
+      <td class="recentTags" style="display:none;" >{{ recentCampaign.tags }}</td>
     </tr>
     {% endfor%}
   </tbody>
@@ -188,6 +193,7 @@
         var title = $(this).find(".recentTitle").text();
         var details = $(this).find(".recentDetails").text();
         var associated_link = $(this).find(".recentLink").text();
+        var tags = $(this).find(".recentTags").text();
         var date = $(this).find(".recentDate").text();
         var id = $(this).find(".recentId").text();
 
@@ -195,13 +201,15 @@
         p += "<form action='edit_content' method='POST'>"
 
 		    p += '<div class="container">'
-        p += '<h2 style="text-align: center" name="code">' + title + "</h2>";
-        p += '<p style="text-align: center" name="details">' + details + "</p>";
-        p += '<h5 style="text-align: center" name="date">' + associated_link + "</h5>";
+        p += '<h2 style="text-align: center" name="title">' + title + "</h2>";
+        p += '<a href="'+associated_link+'" style="text-align: center" name="links"> <h5 style="text-align:center">' + associated_link + "</h5></a>";
+        p += '<p style="text-align: center" name="tags"> Tags: ' + tags + "</p>";
         p += '<h5 style="text-align: center" name="date">' + date + "</h5>";
 
         p += '<input type="hidden" name="title" value="'+title+'"/>'
         p += '<input type="hidden" name="details" value="'+details+'"/>'
+        p += '<input type="hidden" name="tags" value="'+tags+'"/>'
+        p += '<input type="hidden" name="date" value="'+date+'"/>'
         p += '<input type="hidden" name="associated_link" value="'+associated_link+'"/>'
         p += '<input type="hidden" name="id" value="'+id+'"/>'
 		p += '<br/>'

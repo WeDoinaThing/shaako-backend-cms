@@ -113,6 +113,7 @@
         <td class="recentDate">{{ recentCampaign.date }}</td>
         <td class="recentId" style="display:none;" >{{ recentCampaign.id }}</td>
         <td class="recentDetails" style="display:none;" >{{ recentCampaign.quizzes }}</td>
+        <td class="recentTags" style="display:none;" >{{ recentCampaign.tags }}</td>
       </tr>
       {% endfor%}
     </tbody>
@@ -140,9 +141,12 @@
   </thead>
   <tbody>
     {% for recentCampaign in past_campagin %}
-    <tr data-toggle="modal" data-target="#tbModal" class="trPastCampaign">
-      <td class="recentCampaignTitle">{{ recentCampaign.title }}</td>
-      <td class="recentCampaignDate">{{ recentCampaign.date }}</td>
+    <tr data-toggle="modal" data-target="#tbModal" class="trRecentCampaign">
+      <td class="recentTitle">{{ recentCampaign.title }}</td>
+      <td class="recentDate">{{ recentCampaign.date }}</td>
+      <td class="recentId" style="display:none;" >{{ recentCampaign.id }}</td>
+      <td class="recentDetails" style="display:none;" >{{ recentCampaign.quizzes }}</td>
+      <td class="recentTags" style="display:none;" >{{ recentCampaign.tags }}</td>
     </tr>
     {% endfor%}
   </tbody>
@@ -186,8 +190,8 @@
     $(".trRecentCampaign").click(function () {
         var title = $(this).find(".recentTitle").text();
         var details = $(this).find(".recentDetails").text();
-        var associated_link = $(this).find(".recentLink").text();
         var date = $(this).find(".recentDate").text();
+        var tags = $(this).find(".recentTags").text();
         var id = $(this).find(".recentId").text();
 
         var p = "";
@@ -195,13 +199,12 @@
 
 		    p += '<div class="container">'
         p += '<h2 style="text-align: center" name="code">' + title + "</h2>";
-        p += '<p style="text-align: center" name="details">' + details + "</p>";
-        p += '<h5 style="text-align: center" name="date">' + associated_link + "</h5>";
+        p += '<p style="text-align: center" name="tags"> Tags: ' + tags + "</p>";
         p += '<h5 style="text-align: center" name="date">' + date + "</h5>";
 
         p += '<input type="hidden" name="title" value="'+title+'"/>'
+        p += '<input type="hidden" name="tags" value="'+tags+'"/>'
         p += '<input type="hidden" name="details" value="'+details+'"/>'
-        p += '<input type="hidden" name="associated_link" value="'+associated_link+'"/>'
         p += '<input type="hidden" name="id" value="'+id+'"/>'
 		p += '<br/>'
         p += '<button type="submit" class="btn btn-success btn-lg btn-block" value="submit">Edit Quiz</button>'

@@ -124,11 +124,6 @@ def update_profile(request):
 @csrf_exempt
 def edit_content(request):
     if request.method == "POST":
-        print("Chole Elam")
-        print(request.POST.get("id"))
-        print(request.POST.get("title"))
-        print(request.POST.get("details"))
-
         selectedCampaign = Content.objects.get(id=request.POST.get("id"))
         date = str(datetime.datetime.now().strftime("%Y-%m-%d"))
 
@@ -136,6 +131,7 @@ def edit_content(request):
         request,
         "teacher/ngo_admin_edit_content.html",
         {
+            "is_ngo_admin": True,
             "entry": selectedCampaign,
             "current_date": date,
         },
@@ -149,6 +145,7 @@ def update_content(request):
         url = request.POST.get("inputContentLink")
         details = request.POST.get("inputCampaignDetails")
         date = request.POST.get("inputDate")
+        tags = request.POST.get("inputContentTags")
         
         print(request.POST.get("id"))
 
@@ -158,6 +155,7 @@ def update_content(request):
             selectedCampaign.associated_link = url
             selectedCampaign.details = details
             selectedCampaign.date = date
+            selectedCampaign.tags = tags
 
             selectedCampaign.save()
             success = True
@@ -204,6 +202,7 @@ def create_content(request):
         url = request.POST.get("inputContentLink")
         details = request.POST.get("inputCampaignDetails")
         date = request.POST.get("inputDate")
+        tags = request.POST.get("inputContentTags")
 
         added_by = NGO_Admin.objects.get(user=request.user)
         try:
@@ -213,6 +212,7 @@ def create_content(request):
                 associated_link = url,
                 added_by = added_by,
                 date = date,
+                tags = tags,
             )
             new_content.save()
             success = True
@@ -303,6 +303,7 @@ def edit_quiz(request):
             "entry": selectedCampaign,
             "title": selectedCampaign.title,
             "quizzes": quizzes,
+            "tags": selectedCampaign.tags,
             "current_date": date,
         },
     )
@@ -316,6 +317,7 @@ def update_quiz(request):
         questions = request.POST.getlist("inputQuizQuestion")
         choices = request.POST.getlist("inputQuizChoices")
         answers = request.POST.getlist("inputQuizAnswer")
+        tags = request.POST.get("inputQuizTags")
         date = request.POST.get("inputDate")
         quizzes = list()
 
@@ -329,6 +331,7 @@ def update_quiz(request):
             selectedCampaign.title = title
             selectedCampaign.quizzes = jsonfied_quiz
             selectedCampaign.date = date
+            selectedCampaign.tags = tags
 
             selectedCampaign.save()
             success = True
@@ -375,6 +378,7 @@ def create_quiz(request):
         questions = request.POST.getlist("inputQuizQuestion")
         choices = request.POST.getlist("inputQuizChoices")
         answers = request.POST.getlist("inputQuizAnswer")
+        tags = request.POST.get("inputQuizTags")
         date = request.POST.get("inputDate")
         quizzes = list()
 
@@ -388,6 +392,7 @@ def create_quiz(request):
                 title = title,
                 quizzes = jsonfied_quiz,
                 added_by = added_by,
+                tags = tags,
                 date = date,
             )
             new_content.save()
@@ -835,6 +840,7 @@ def get_quiz(request):
             jsonDec = json.decoder.JSONDecoder()
             quizzes_list = jsonDec.decode(quiz.quizzes)
             item["quizzes"]= quizzes_list
+            item["tags"] = quiz.tags
             quiz_list.append(item)
 
         return HttpResponse(

@@ -69,19 +69,29 @@ style="color: #eeeeee"
             id="inputContentLink"
             value="{{ entry.associated_link }}"
             name="inputContentLink"
-            required
           />
         </div>
 
         <div class="form-group">
           <label for="inputContentDetails">Campaign Details</label>
-          <input
+          <textarea
             type="text"
             class="form-control"
             id="inputCampaignDetails"
             value="{{ entry.details }}"
             name="inputCampaignDetails"
             required
+          >{{ entry.details }}</textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="inputContentTags">Campaign Tags</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputContentTags"
+            value="{{ entry.tags }}"
+            name="inputContentTags"
           />
         </div>
 

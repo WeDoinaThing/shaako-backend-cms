@@ -1,4 +1,5 @@
 from datetime import date
+from statistics import mode
 import django.dispatch
 from django.db import models
 
@@ -38,7 +39,8 @@ class Content(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(blank=False, max_length=1024)
     details = models.TextField(blank=True, max_length=2056)
-    associated_link = models.CharField(blank=True, max_length=512)
+    tags = models.TextField(blank=True, max_length=512,default='')
+    associated_link = models.CharField(blank=True, max_length=512,default='')
 
     added_by = models.ForeignKey(
         NGO_Admin,
@@ -58,6 +60,7 @@ class Quiz(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(blank=False, max_length=1024)
     quizzes = models.TextField(blank=True, max_length=8192)
+    tags = models.TextField(blank=True, max_length=512,default='')
 
     added_by = models.ForeignKey(
         NGO_Admin,

@@ -7,6 +7,10 @@
   src: url("../Azonix.otf");
 }
 
+* {  
+  font-family: 'Nunito', sans-serif;
+}  
+  
 .container{
   padding-top: 10px;
 }
