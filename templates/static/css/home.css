@@ -1,31 +1,20 @@
-@font-face {
-    font-family: azonix;
-    src: url('../Azonix.otf');
-}
+* {  
+    font-family: 'Nunito', sans-serif;
+  }  
 
 #btntext {
-    font-size: 24px;
+    font-size: 20px;
     height: 50px;
+    width: 200px;
+    border-radius: 200px;
     text-align: center;
     padding-right: 10px;
     padding-bottom: 0px;
     padding-top: 0px;
 }
 
-.container {
-    /* margin-left: 24%; */
-    margin-top: 100px;
-    margin-bottom: 5px
-}
-
-.container.sec {
-    margin-top: 50px;
-    margin-left: 250px;
-}
-
 .text {
     text-align: center;
-    font-family: azonix, sans-serif;
     padding-right: 50px;
     font-stretch: extra-expanded;
     font-size: 12pt;
@@ -38,7 +27,7 @@
 
 .btn-success {
     background: #23bab5;
-    border-radius: 0;
+    border-radius: 100;
     border: 2px solid #23bab5;
     webkit-transition: all 400ms cubic-bezier(.4, 0, .2, 1);
     transition: all 400ms cubic-bezier(.4, 0, .2, 1);
@@ -89,6 +78,14 @@ article[role="login"] h1 {
     margin-bottom: 20px;
 }
 
+article[role="login"] h3{
+    color: #23bab5;
+}
+
+article[role="login"] h5{
+    color: #23bab5;
+}
+
 article[role="login"] p {
     font-size: 16px;
     padding: 5px 15px;
@@ -129,7 +126,7 @@ article[role="login"] p {
     color: #FFF;
     background-color: #23bab5;
     border: 0;
-    border-radius: 0;
+    border-radius: 400;
 }
 
 .mobile-pull {
@@ -207,6 +204,12 @@ article[role="manufacturer"] ul li i {
 
 
 .form-control {
-    height: 55px;
+    height: 40px;
+    width: 420px;
     font-size: 17px;
 }
+
+.container {
+    display: flex;
+    justify-content: center;
+  }

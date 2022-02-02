@@ -11,73 +11,48 @@
             id="bootstrap-css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
             integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        
+        <link rel="stylesheet" href={% static "css/home.css" %}>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="{% static 'css/home.css' %}">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@600&display=swap" rel="stylesheet">
-
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"> 
     </head>
 
     <body>
-
         <div class="container">
-            <div class="row align-items-center no-gutters" style="text-align: center">
-                <div class="col-xl-auto">
-                    <div class="container sec">
-                        <div class="login-signup">
-                            <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active" id="home">
-                                    <div class="row">
-
-                                        <div class="col mobile-pull">
-                                            <article role="login" style="background-color: #e9f3f8">
-                                                <h3>NGO Management Portal</h3>
-                                                <h1 class="text-center"
-                                                    style="padding-right: 10px;font-family: 'Source Sans Pro', sans-serif;">
-                                                    <i class="fa fa-lock"></i><span
-                                                        style="padding-left: 10px;">Login</span></h1>
-                                                <p></p>
-                                                <form class="signup" method="POST">
-                                                    {% csrf_token %}
-                                                    <div class="form-group">
-                                                        <input type="email" class="form-control"
-                                                            placeholder="Email Address" name="email">
-                                                    </div>
-                                                    <p></p>
-                                                    <div class="form-group">
-                                                        <input type="password" class="form-control"
-                                                            placeholder="Password" name="password">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <p></p>
-                                                        <input type="submit" id="btntext"
-                                                            class="btn btn-success btn-block" value="SUBMIT">
-                                                    </div>
-                                                </form>
-
-                                                <footer role="signup" class="text-center">
-                                                    <p></p>
-                                                    <p></p>
-
-                                                </footer>
-
-                                            </article>
-                                        </div>
-
-                                    </div>
-                                    <!-- end of row -->
-                                </div>
-                                <!-- end of home -->
-
-                                </article>
-                            </div>
-                        </div>
+            <img src="{% static "logo.png" %}" height="150">
+        </div>
+        <div class="container">
+            <h2><b>SHAAKO - Management Portal</b></h2>
+        </div>
+    </br>
+        <div class="container">
+            <article role="login" style="background-color: #e9f3f8">
+                <h5 class="text-center"
+                    style="padding-right: 10px;">
+                    <i class="fa fa-lock"></i><span
+                        style="padding-left: 10px;">Enter Your Credentials</span></h5>
+                <p></p>
+                <form class="signup" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="email" class="form-control"
+                            placeholder="Email Address" name="email">
                     </div>
-                </div>
-            </div>
-        </div>
-        </div>
+                    <p></p>
+                    <div class="form-group">
+                        <input type="password" class="form-control"
+                            placeholder="Password" name="password">
+                    </div>
+                </br>
+                    <div class="form-group container">
+                        <input type="submit" id="btntext"
+                            class="btn btn-success btn-block" value="Login">
+                    </div>
+                </form>
+            </article>
         </div>
 
     </body>
